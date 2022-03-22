@@ -1,0 +1,17 @@
+*~
+*.sw[po]
+
+.vscode/
+.idea/
+
+.DS_Store
+
+bin/
+build/
+debug/
+CMakeFiles/
+CMakeCache.txt
+
+extern/
+
+venv/
