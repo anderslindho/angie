@@ -16,7 +16,7 @@ set(EXTERN_DIR extern)
 
 file(GLOB SRCS ${SRC_DIR}/*.cc)
 
-add_executable(${PROJECT_NAME} ${SRC_DIR}/main.cc)
+add_executable(${PROJECT_NAME} ${SRCS})
 
 target_compile_definitions(${PROJECT_NAME} PRIVATE GLFW_INCLUDE_NONE)
 if(MSVC)
