@@ -11,8 +11,8 @@
 
 #include "utils.hh"
 
-
-Application::Application(const int width, const int height) : m_width(width), m_height(height) {
+Application::Application(const int width, const int height)
+    : m_width(width), m_height(height) {
   m_start_time = std::chrono::system_clock::now();
   m_window = [&]() {
     glfwInit();

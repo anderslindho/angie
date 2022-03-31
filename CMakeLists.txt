@@ -4,7 +4,8 @@ project(
   angie
   VERSION 0.1.0
   DESCRIPTION "OpenGL play project"
-  LANGUAGES CXX C)
+  LANGUAGES CXX C
+)
 
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_STANDARD 17)
@@ -29,33 +30,12 @@ endif()
 find_package(OpenGL REQUIRED)
 include_directories(${OPENGL_INCLUDE_DIR})
 
-set(GLFW_DIR ${EXTERN_DIR}/glfw)
-set(GLFW_BUILD_EXAMPLES
-    OFF
-    CACHE BOOL "Build the GLFW example programs")
-set(GLFW_BUILD_TESTS
-    OFF
-    CACHE BOOL "Build the GLFW test programs")
-set(GLFW_BUILD_DOCS
-    OFF
-    CACHE BOOL "Build the GLFW documentation")
-set(GLFW_INSTALL
-    OFF
-    CACHE BOOL "Generate installation target")
-add_subdirectory(${GLFW_DIR})
-target_link_libraries(${PROJECT_NAME} glfw ${GLFW_LIBRARIES})
+include(cmake/LoadLibs.cmake)
 
-set(GLAD_DIR ${LIB_DIR}/glad)
-add_library(glad ${GLAD_DIR}/src/glad.c)
-target_include_directories(glad PRIVATE ${GLAD_DIR}/include)
-target_include_directories(${PROJECT_NAME} PRIVATE ${GLAD_DIR}/include)
-target_link_libraries(${PROJECT_NAME} glad ${CMAKE_DL_LIBS})
-
-set(GLM_DIR ${EXTERN_DIR}/glm)
-add_subdirectory(${GLM_DIR})
-target_include_directories(glm PRIVATE ${GLM_INCLUDE_DIRS})
-target_link_libraries(${PROJECT_NAME} glm)
-
-set(SPDLOG_DIR ${EXTERN_DIR}/spdlog)
-add_subdirectory(${SPDLOG_DIR})
-target_link_libraries(${PROJECT_NAME} spdlog)
+target_link_libraries(
+  ${PROJECT_NAME}
+  glfw ${GLFW_LIBRARIES}
+  glad ${CMAKE_DL_LIBS}
+  glm
+  spdlog
+)
