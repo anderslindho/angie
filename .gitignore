@@ -12,6 +12,4 @@ debug/
 CMakeFiles/
 CMakeCache.txt
 
-extern/
-
 venv/
