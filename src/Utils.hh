@@ -4,6 +4,8 @@
 #include <iostream>
 #include <string>
 
+#include <spdlog/spdlog.h>
+
 #include <GLFW/glfw3.h>
 #include <glad/glad.h>
 
@@ -20,7 +22,7 @@ void process_input(GLFWwindow *window) {
 std::string read_file(const std::string &fname) {
   std::ifstream ifs(fname, std::ios::in);
   if (!ifs.is_open()) {
-    std::cerr << "Failed to load file " << fname << std::endl;
+    spdlog::error("Failed to load file {}", fname);
     return "";
   }
 

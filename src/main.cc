@@ -1,9 +1,11 @@
-#include "Utils.hh"
+#include "utils.hh"
 
 #include <chrono>
 #include <cstdlib>
 #include <iostream>
 #include <string>
+
+#include <spdlog/spdlog.h>
 
 #include <GLFW/glfw3.h>
 #include <glad/glad.h>
@@ -27,7 +29,7 @@ int main(int /* argc */, char ** /*argv*/) {
     GLFWwindow *window =
         glfwCreateWindow(k_width, k_height, "angie", nullptr, nullptr);
     if (!window) {
-      std::cerr << "Failed to init window" << std::endl;
+      spdlog::error("Failed to init window");
       glfwTerminate();
       std::exit(EXIT_FAILURE);
     }
@@ -35,7 +37,7 @@ int main(int /* argc */, char ** /*argv*/) {
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
     if (!gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress))) {
-      std::cerr << "Failed on init glad" << std::endl;
+      spdlog::error("Failed on init glad");
       glfwTerminate();
       glfwDestroyWindow(window);
       std::exit(EXIT_FAILURE);
@@ -55,8 +57,7 @@ int main(int /* argc */, char ** /*argv*/) {
   glGetShaderiv(vertex_shader, GL_COMPILE_STATUS, &success);
   if (!success) {
     glGetShaderInfoLog(vertex_shader, 512, nullptr, info_log);
-    std::cerr << "Failed to compile vertex shader" << std::endl
-              << info_log << std::endl;
+    spdlog::error("Failed to compile vertex shader", info_log);
   }
 
   unsigned int fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
@@ -68,8 +69,7 @@ int main(int /* argc */, char ** /*argv*/) {
   glGetShaderiv(fragment_shader, GL_COMPILE_STATUS, &success);
   if (!success) {
     glGetShaderInfoLog(fragment_shader, 512, nullptr, info_log);
-    std::cerr << "Failed to compile fragment shader" << std::endl
-              << info_log << std::endl;
+    spdlog::error("Failed to compile fragment shader {}", info_log);
   }
 
   unsigned int shader_program = glCreateProgram();
@@ -79,8 +79,7 @@ int main(int /* argc */, char ** /*argv*/) {
   glGetProgramiv(shader_program, GL_LINK_STATUS, &success);
   if (!success) {
     glGetProgramInfoLog(shader_program, 512, nullptr, info_log);
-    std::cerr << "Failed to link shader program" << std::endl
-              << info_log << std::endl;
+    spdlog::error("Failed to link shader program {}", info_log);
   }
   glDeleteShader(vertex_shader);
   glDeleteShader(fragment_shader);
@@ -144,7 +143,7 @@ int main(int /* argc */, char ** /*argv*/) {
   const auto run_time = std::chrono::duration_cast<std::chrono::seconds>(
                             current_time - start_time)
                             .count();
-  std::cout << "Program ran for " << run_time << " seconds." << std::endl;
+  spdlog::info("Program ran for {} seconds.", run_time);
 
   std::exit(EXIT_SUCCESS);
 }

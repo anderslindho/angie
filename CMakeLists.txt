@@ -53,3 +53,7 @@ target_link_libraries(${APP} glad ${CMAKE_DL_LIBS})
 
 set(GLM_DIR ${EXTERN_DIR}/glm)
 include_directories(PRIVATE ${GLM_DIR})
+
+set(SPDLOG_DIR ${EXTERN_DIR}/spdlog)
+add_subdirectory(${SPDLOG_DIR})
+target_link_libraries(${APP} spdlog)
