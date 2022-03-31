@@ -14,16 +14,16 @@ set(SRC_DIR src)
 set(LIB_DIR libs)
 set(EXTERN_DIR extern)
 
-set(APP app)
 file(GLOB SRCS ${SRC_DIR}/*.cc)
 
-add_executable(${APP} ${SRC_DIR}/main.cc)
+add_executable(${PROJECT_NAME} ${SRC_DIR}/main.cc)
 
-target_compile_definitions(${APP} PRIVATE GLFW_INCLUDE_NONE)
+target_compile_definitions(${PROJECT_NAME} PRIVATE GLFW_INCLUDE_NONE)
 if(MSVC)
-  target_compile_options(${APP} PRIVATE /W4 /WX)
+  target_compile_options(${PROJECT_NAME} PRIVATE /W4 /WX)
 else()
-  target_compile_options(${APP} PRIVATE -Wall -Wextra -Wpedantic -Werror)
+  target_compile_options(${PROJECT_NAME} PRIVATE -Wall -Wextra -Wpedantic
+                                                 -Werror)
 endif()
 
 find_package(OpenGL REQUIRED)
@@ -43,17 +43,19 @@ set(GLFW_INSTALL
     OFF
     CACHE INTERNAL "Generate installation target")
 add_subdirectory(${GLFW_DIR})
-target_link_libraries(${APP} glfw ${GLFW_LIBRARIES})
+target_link_libraries(${PROJECT_NAME} glfw ${GLFW_LIBRARIES})
 
 set(GLAD_DIR ${LIB_DIR}/glad)
 add_library(glad ${GLAD_DIR}/src/glad.c)
 target_include_directories(glad PRIVATE ${GLAD_DIR}/include)
-target_include_directories(${APP} PRIVATE ${GLAD_DIR}/include)
-target_link_libraries(${APP} glad ${CMAKE_DL_LIBS})
+target_include_directories(${PROJECT_NAME} PRIVATE ${GLAD_DIR}/include)
+target_link_libraries(${PROJECT_NAME} glad ${CMAKE_DL_LIBS})
 
 set(GLM_DIR ${EXTERN_DIR}/glm)
-include_directories(PRIVATE ${GLM_DIR})
+add_subdirectory(${GLM_DIR})
+target_include_directories(glm PRIVATE ${GLM_INCLUDE_DIRS})
+target_link_libraries(${PROJECT_NAME} glm)
 
 set(SPDLOG_DIR ${EXTERN_DIR}/spdlog)
 add_subdirectory(${SPDLOG_DIR})
-target_link_libraries(${APP} spdlog)
+target_link_libraries(${PROJECT_NAME} spdlog)
