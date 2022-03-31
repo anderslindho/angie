@@ -1,23 +1,15 @@
 #include "Utils.hh"
 
+#include <cstdlib>
 #include <iostream>
 #include <string>
 
 #include <GLFW/glfw3.h>
 #include <glad/glad.h>
 
-const int WIDTH = 480;
-const int HEIGHT = 320;
+const int k_width = 480;
+const int k_height = 320;
 
-void framebuffer_size_callback(GLFWwindow * /* window */, int width,
-                               int height) {
-  glViewport(0, 0, width, height);
-}
-
-void process_input(GLFWwindow *window) {
-  if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
-    glfwSetWindowShouldClose(window, true);
-}
 
 int main(int /* argc */, char ** /*argv*/) {
   glfwInit();
@@ -30,11 +22,11 @@ int main(int /* argc */, char ** /*argv*/) {
 #endif
 
   GLFWwindow *window =
-      glfwCreateWindow(WIDTH, HEIGHT, "angie", nullptr, nullptr);
+      glfwCreateWindow(k_width, k_height, "angie", nullptr, nullptr);
   if (!window) {
     std::cerr << "Failed to init window" << std::endl;
     glfwTerminate();
-    return EXIT_FAILURE;
+    std::exit(EXIT_FAILURE);
   }
   glfwMakeContextCurrent(window);
   glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
@@ -43,14 +35,14 @@ int main(int /* argc */, char ** /*argv*/) {
     std::cerr << "Failed on init glad" << std::endl;
     glfwTerminate();
     glfwDestroyWindow(window);
-    return EXIT_FAILURE;
+    std::exit(EXIT_FAILURE);
   }
 
   int success;
   char infoLog[512];
 
   unsigned int vertexShader = glCreateShader(GL_VERTEX_SHADER);
-  const std::string vertexShaderSource = readFile("res/shaders/vertex.glsl");
+  const std::string vertexShaderSource = read_file("res/shaders/vertex.glsl");
   const GLchar *vertexShaderSourceC = vertexShaderSource.c_str();
   glShaderSource(vertexShader, 1, &vertexShaderSourceC, nullptr);
   glCompileShader(vertexShader);
@@ -63,7 +55,7 @@ int main(int /* argc */, char ** /*argv*/) {
   }
 
   unsigned int fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-  const std::string fragmentShaderSource = readFile("res/shaders/fragment.glsl");
+  const std::string fragmentShaderSource = read_file("res/shaders/fragment.glsl");
   const GLchar *fragmentShaderSourceC = fragmentShaderSource.c_str();
   glShaderSource(fragmentShader, 1, &fragmentShaderSourceC, nullptr);
   glCompileShader(fragmentShader);
@@ -130,5 +122,5 @@ int main(int /* argc */, char ** /*argv*/) {
   glfwDestroyWindow(window);
   glfwTerminate();
 
-  return EXIT_SUCCESS;
+  std::exit(EXIT_SUCCESS);
 }
