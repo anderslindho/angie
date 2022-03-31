@@ -11,4 +11,4 @@ To build and run::
 	$ git submodule update --init
 	$ cmake -S . -B build
 	$ cmake --build build
-	$ ./bin/sandbox
+	$ ./bin/app
