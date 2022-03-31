@@ -79,7 +79,7 @@ int main(int /* argc */, char ** /*argv*/) {
   glGetProgramiv(shader_program, GL_LINK_STATUS, &success);
   if (!success) {
     glGetProgramInfoLog(shader_program, 512, nullptr, info_log);
-    spdlog::error("Failed to link shader program {}", info_log);
+    spdlog::error("Failed to link shader program\n{}", info_log);
   }
   glDeleteShader(vertex_shader);
   glDeleteShader(fragment_shader);
