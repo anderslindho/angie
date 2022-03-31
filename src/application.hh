@@ -8,11 +8,14 @@
 struct Application {
 private:
   GLFWwindow *m_window;
-  int m_width;
-  int m_height;
+  unsigned int m_program;
+  unsigned int VBO, VAO, EBO;
   std::chrono::time_point<std::chrono::system_clock> m_start_time;
 
 public:
   Application(const int width, const int height);
   ~Application();
+
+  void initialise();
+  void run();
 };

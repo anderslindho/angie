@@ -19,7 +19,7 @@ void process_input(GLFWwindow *window) {
     glfwSetWindowShouldClose(window, true);
 }
 
-std::string read_file(const std::string &fname) {
+const std::string read_file(const std::string &fname) {
   std::ifstream ifs(fname, std::ios::in);
   if (!ifs.is_open()) {
     spdlog::error("Failed to load file {}", fname);

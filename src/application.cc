@@ -11,10 +11,9 @@
 
 #include "utils.hh"
 
-Application::Application(const int width, const int height)
-    : m_width(width), m_height(height) {
+Application::Application(const int width, const int height) {
   m_start_time = std::chrono::system_clock::now();
-  m_window = [&]() {
+  m_window = [](const int w, const int h) {
     glfwInit();
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
@@ -24,8 +23,7 @@ Application::Application(const int width, const int height)
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 #endif
 
-    auto window =
-        glfwCreateWindow(m_width, m_height, "angie", nullptr, nullptr);
+    auto window = glfwCreateWindow(w, h, "angie", nullptr, nullptr);
     if (!window) {
       spdlog::error("Failed to init window");
       glfwTerminate();
@@ -41,47 +39,69 @@ Application::Application(const int width, const int height)
       std::exit(EXIT_FAILURE);
     }
     return window;
+  }(width, height);
+  m_program = []() {
+    int success;
+    char info_log[512];
+
+    const auto vertex_shader = glCreateShader(GL_VERTEX_SHADER);
+    const std::string vertex_shader_src = read_file("res/shaders/vertex.glsl");
+    const GLchar *vertex_shader_source_C = vertex_shader_src.c_str();
+    glShaderSource(vertex_shader, 1, &vertex_shader_source_C, nullptr);
+    glCompileShader(vertex_shader);
+
+    glGetShaderiv(vertex_shader, GL_COMPILE_STATUS, &success);
+    if (!success) {
+      glGetShaderInfoLog(vertex_shader, 512, nullptr, info_log);
+      spdlog::error("Failed to compile vertex shader", info_log);
+    }
+
+    const auto fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
+    const std::string fragment_shader_src =
+        read_file("res/shaders/fragment.glsl");
+    const GLchar *fragment_shader_src_C = fragment_shader_src.c_str();
+    glShaderSource(fragment_shader, 1, &fragment_shader_src_C, nullptr);
+    glCompileShader(fragment_shader);
+    glGetShaderiv(fragment_shader, GL_COMPILE_STATUS, &success);
+    if (!success) {
+      glGetShaderInfoLog(fragment_shader, 512, nullptr, info_log);
+      spdlog::error("Failed to compile fragment shader {}", info_log);
+    }
+
+    const auto shader_program = glCreateProgram();
+    glAttachShader(shader_program, vertex_shader);
+    glAttachShader(shader_program, fragment_shader);
+    glLinkProgram(shader_program);
+    glGetProgramiv(shader_program, GL_LINK_STATUS, &success);
+    if (!success) {
+      glGetProgramInfoLog(shader_program, 512, nullptr, info_log);
+      spdlog::error("Failed to link shader program\n{}", info_log);
+    }
+    glDeleteShader(vertex_shader);
+    glDeleteShader(fragment_shader);
+    return shader_program;
   }();
+}
 
-  int success;
-  char info_log[512];
+Application::~Application() {
+  glDeleteVertexArrays(1, &VAO);
+  glDeleteBuffers(1, &VBO);
+  glDeleteBuffers(1, &EBO);
 
-  unsigned int vertex_shader = glCreateShader(GL_VERTEX_SHADER);
-  const std::string vertex_shader_src = read_file("res/shaders/vertex.glsl");
-  const GLchar *vertex_shader_source_C = vertex_shader_src.c_str();
-  glShaderSource(vertex_shader, 1, &vertex_shader_source_C, nullptr);
-  glCompileShader(vertex_shader);
+  glDeleteProgram(m_program);
 
-  glGetShaderiv(vertex_shader, GL_COMPILE_STATUS, &success);
-  if (!success) {
-    glGetShaderInfoLog(vertex_shader, 512, nullptr, info_log);
-    spdlog::error("Failed to compile vertex shader", info_log);
-  }
+  if (m_window)
+    glfwDestroyWindow(m_window);
+  glfwTerminate();
 
-  unsigned int fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
-  const std::string fragment_shader_src =
-      read_file("res/shaders/fragment.glsl");
-  const GLchar *fragment_shader_src_C = fragment_shader_src.c_str();
-  glShaderSource(fragment_shader, 1, &fragment_shader_src_C, nullptr);
-  glCompileShader(fragment_shader);
-  glGetShaderiv(fragment_shader, GL_COMPILE_STATUS, &success);
-  if (!success) {
-    glGetShaderInfoLog(fragment_shader, 512, nullptr, info_log);
-    spdlog::error("Failed to compile fragment shader {}", info_log);
-  }
+  const auto current_time = std::chrono::system_clock::now();
+  const auto run_time = std::chrono::duration_cast<std::chrono::seconds>(
+                            current_time - m_start_time)
+                            .count();
+  spdlog::info("Program ran for {} seconds.", run_time);
+}
 
-  unsigned int shader_program = glCreateProgram();
-  glAttachShader(shader_program, vertex_shader);
-  glAttachShader(shader_program, fragment_shader);
-  glLinkProgram(shader_program);
-  glGetProgramiv(shader_program, GL_LINK_STATUS, &success);
-  if (!success) {
-    glGetProgramInfoLog(shader_program, 512, nullptr, info_log);
-    spdlog::error("Failed to link shader program\n{}", info_log);
-  }
-  glDeleteShader(vertex_shader);
-  glDeleteShader(fragment_shader);
-
+void Application::initialise() {
   const float vertices[] = {
       0.5f,  0.5f,  0.0f, // top right
       0.5f,  -0.5f, 0.0f, // bottom right
@@ -94,7 +114,6 @@ Application::Application(const int width, const int height)
       1, 2, 3  // second triangle
   };
 
-  unsigned int VBO, VAO, EBO;
   glGenVertexArrays(1, &VAO);
   glGenBuffers(1, &VBO);
   glGenBuffers(1, &EBO);
@@ -114,37 +133,20 @@ Application::Application(const int width, const int height)
   glBindBuffer(GL_ARRAY_BUFFER, 0);
 
   glBindVertexArray(0);
+}
 
+void Application::run() {
   while (!glfwWindowShouldClose(m_window)) {
     process_input(m_window);
 
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
 
-    glUseProgram(shader_program);
+    glUseProgram(m_program);
     glBindVertexArray(VAO);
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
     glfwSwapBuffers(m_window);
     glfwPollEvents();
   }
-
-  glDeleteVertexArrays(1, &VAO);
-  glDeleteBuffers(1, &VBO);
-  glDeleteBuffers(1, &EBO);
-  glDeleteProgram(shader_program);
-}
-
-Application::~Application() {
-  if (m_window)
-    glfwDestroyWindow(m_window);
-  glfwTerminate();
-
-  const auto current_time = std::chrono::system_clock::now();
-  const auto run_time = std::chrono::duration_cast<std::chrono::seconds>(
-                            current_time - m_start_time)
-                            .count();
-  spdlog::info("Program ran for {} seconds.", run_time);
-
-  std::exit(EXIT_SUCCESS);
 }
