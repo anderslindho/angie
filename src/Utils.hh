@@ -1,8 +1,8 @@
 #pragma once
 
-#include <string>
-#include <iostream>
 #include <fstream>
+#include <iostream>
+#include <string>
 
 #include <GLFW/glfw3.h>
 #include <glad/glad.h>
@@ -18,14 +18,12 @@ void process_input(GLFWwindow *window) {
 }
 
 std::string read_file(const std::string &fname) {
-	std::ifstream ifs(fname, std::ios::in);
-	if (!ifs.is_open()) {
-		std::cerr << "Failed to load file " << fname << std::endl;
-		return "";
-	}
+  std::ifstream ifs(fname, std::ios::in);
+  if (!ifs.is_open()) {
+    std::cerr << "Failed to load file " << fname << std::endl;
+    return "";
+  }
 
-	return std::string(
-		(std::istreambuf_iterator<char>(ifs)),
-		(std::istreambuf_iterator<char>())
-	);
+  return std::string((std::istreambuf_iterator<char>(ifs)),
+                     (std::istreambuf_iterator<char>()));
 }
