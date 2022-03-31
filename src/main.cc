@@ -1,5 +1,6 @@
 #include "Utils.hh"
 
+#include <chrono>
 #include <cstdlib>
 #include <iostream>
 #include <string>
@@ -11,31 +12,36 @@ const int k_width = 480;
 const int k_height = 320;
 
 int main(int /* argc */, char ** /*argv*/) {
-  glfwInit();
-  glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-  glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
-  glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+  auto start_time = std::chrono::system_clock::now();
+
+  const auto window = []() {
+    glfwInit();
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 #ifdef __APPLE__
-  glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 #endif
 
-  GLFWwindow *window =
-      glfwCreateWindow(k_width, k_height, "angie", nullptr, nullptr);
-  if (!window) {
-    std::cerr << "Failed to init window" << std::endl;
-    glfwTerminate();
-    std::exit(EXIT_FAILURE);
-  }
-  glfwMakeContextCurrent(window);
-  glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+    GLFWwindow *window =
+        glfwCreateWindow(k_width, k_height, "angie", nullptr, nullptr);
+    if (!window) {
+      std::cerr << "Failed to init window" << std::endl;
+      glfwTerminate();
+      std::exit(EXIT_FAILURE);
+    }
+    glfwMakeContextCurrent(window);
+    glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
-  if (!gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress))) {
-    std::cerr << "Failed on init glad" << std::endl;
-    glfwTerminate();
-    glfwDestroyWindow(window);
-    std::exit(EXIT_FAILURE);
-  }
+    if (!gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress))) {
+      std::cerr << "Failed on init glad" << std::endl;
+      glfwTerminate();
+      glfwDestroyWindow(window);
+      std::exit(EXIT_FAILURE);
+    }
+    return window;
+  }();
 
   int success;
   char info_log[512];
@@ -133,6 +139,12 @@ int main(int /* argc */, char ** /*argv*/) {
 
   glfwDestroyWindow(window);
   glfwTerminate();
+
+  const auto current_time = std::chrono::system_clock::now();
+  const auto run_time = std::chrono::duration_cast<std::chrono::seconds>(
+                            current_time - start_time)
+                            .count();
+  std::cout << "Program ran for " << run_time << " seconds." << std::endl;
 
   std::exit(EXIT_SUCCESS);
 }
