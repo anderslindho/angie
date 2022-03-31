@@ -12,9 +12,10 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/../bin)
 set(SRC_DIR src)
 set(LIB_DIR libs)
 set(EXTERN_DIR extern)
-set(APP engine)
+set(APP sandbox)
 
 add_executable(${APP} ${SRC_DIR}/main.cc)
+
 target_compile_definitions(${APP} PRIVATE GLFW_INCLUDE_NONE)
 if(MSVC)
   target_compile_options(${APP} PRIVATE /W4 /WX)
