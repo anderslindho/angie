@@ -1,6 +1,7 @@
 #include "application.hh"
 
 #include <chrono>
+#include <cmath>
 #include <cstdlib>
 #include <iostream>
 #include <string>
@@ -142,7 +143,16 @@ void Application::run() {
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
 
+    const auto current_time = std::chrono::system_clock::now();
+    const auto run_time = std::chrono::duration_cast<std::chrono::seconds>(
+                              current_time - m_start_time)
+                              .count();
+
+    const auto sin = 0.5 + std::sin(run_time) / 2.0f;
+    const auto vertex_location = glGetUniformLocation(m_program, "ourColour");
     glUseProgram(m_program);
+    glUniform4f(vertex_location, 1.0, sin, 0.3, 1.0);
+
     glBindVertexArray(VAO);
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
