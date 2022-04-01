@@ -17,7 +17,7 @@ private:
   std::chrono::time_point<std::chrono::system_clock> m_start_time;
 
 public:
-  Application(const int width, const int height);
+  Application(const unsigned int width, const unsigned int height);
   ~Application();
 
   void initialise();

@@ -12,7 +12,7 @@
 
 #include "utils.hh"
 
-Application::Application(const int width, const int height) {
+Application::Application(const unsigned int width, const unsigned int height) {
   m_start_time = std::chrono::system_clock::now();
   m_window = [](const int w, const int h) {
     glfwInit();
