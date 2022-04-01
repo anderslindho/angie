@@ -10,6 +10,7 @@
 
 #include <glm/glm.hpp>
 
+#include "shader.hh"
 #include "utils.hh"
 
 Application::Application(const unsigned int width, const unsigned int height) {
@@ -41,55 +42,12 @@ Application::Application(const unsigned int width, const unsigned int height) {
     }
     return window;
   }(width, height);
-  m_program = []() {
-    int success;
-    char info_log[512];
-
-    const auto vertex_shader = glCreateShader(GL_VERTEX_SHADER);
-    const std::string vertex_shader_src = read_file("res/shaders/vertex.glsl");
-    const char *vertex_shader_source_C = vertex_shader_src.c_str();
-    glShaderSource(vertex_shader, 1, &vertex_shader_source_C, nullptr);
-    glCompileShader(vertex_shader);
-
-    glGetShaderiv(vertex_shader, GL_COMPILE_STATUS, &success);
-    if (!success) {
-      glGetShaderInfoLog(vertex_shader, 512, nullptr, info_log);
-      spdlog::error("Failed to compile vertex shader", info_log);
-    }
-
-    const auto fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
-    const std::string fragment_shader_src =
-        read_file("res/shaders/fragment.glsl");
-    const char *fragment_shader_src_C = fragment_shader_src.c_str();
-    glShaderSource(fragment_shader, 1, &fragment_shader_src_C, nullptr);
-    glCompileShader(fragment_shader);
-    glGetShaderiv(fragment_shader, GL_COMPILE_STATUS, &success);
-    if (!success) {
-      glGetShaderInfoLog(fragment_shader, 512, nullptr, info_log);
-      spdlog::error("Failed to compile fragment shader {}", info_log);
-    }
-
-    const auto shader_program = glCreateProgram();
-    glAttachShader(shader_program, vertex_shader);
-    glAttachShader(shader_program, fragment_shader);
-    glLinkProgram(shader_program);
-    glGetProgramiv(shader_program, GL_LINK_STATUS, &success);
-    if (!success) {
-      glGetProgramInfoLog(shader_program, 512, nullptr, info_log);
-      spdlog::error("Failed to link shader program\n{}", info_log);
-    }
-    glDeleteShader(vertex_shader);
-    glDeleteShader(fragment_shader);
-    return shader_program;
-  }();
 }
 
 Application::~Application() {
   glDeleteVertexArrays(1, &VAO);
   glDeleteBuffers(1, &VBO);
   glDeleteBuffers(1, &EBO);
-
-  glDeleteProgram(m_program);
 
   if (m_window)
     glfwDestroyWindow(m_window);
@@ -133,22 +91,21 @@ void Application::initialise() {
 }
 
 void Application::run() {
+  auto program = Shader("res/shaders/vertex.glsl", "res/shaders/fragment.glsl");
   while (!glfwWindowShouldClose(m_window)) {
     process_input(m_window);
 
-    glClearColor(k_bg_colour[0], k_bg_colour[1], k_bg_colour[2],
-                 k_bg_colour[3]);
+    glClearColor(0.1f, 0.1f, 0.2f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
 
+    program.use();
     const auto current_time = std::chrono::system_clock::now();
     const auto run_time = std::chrono::duration_cast<std::chrono::milliseconds>(
                               current_time - m_start_time)
                               .count();
 
     const auto sin = std::sin(run_time / 1000.0f) / 2.0f + 0.5f;
-    const auto vertex_location = glGetUniformLocation(m_program, "ourColour");
-    glUseProgram(m_program);
-    glUniform4f(vertex_location, 1.0, sin, 0.3, 1.0);
+    program.set_vec3("ourColour", 1.0f, sin, 0.3f);
 
     glBindVertexArray(VAO);
     glDrawArrays(GL_TRIANGLES, 0, 3);
