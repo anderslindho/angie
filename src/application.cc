@@ -47,7 +47,7 @@ Application::Application(const int width, const int height) {
 
     const auto vertex_shader = glCreateShader(GL_VERTEX_SHADER);
     const std::string vertex_shader_src = read_file("res/shaders/vertex.glsl");
-    const GLchar *vertex_shader_source_C = vertex_shader_src.c_str();
+    const char *vertex_shader_source_C = vertex_shader_src.c_str();
     glShaderSource(vertex_shader, 1, &vertex_shader_source_C, nullptr);
     glCompileShader(vertex_shader);
 
@@ -60,7 +60,7 @@ Application::Application(const int width, const int height) {
     const auto fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
     const std::string fragment_shader_src =
         read_file("res/shaders/fragment.glsl");
-    const GLchar *fragment_shader_src_C = fragment_shader_src.c_str();
+    const char *fragment_shader_src_C = fragment_shader_src.c_str();
     glShaderSource(fragment_shader, 1, &fragment_shader_src_C, nullptr);
     glCompileShader(fragment_shader);
     glGetShaderiv(fragment_shader, GL_COMPILE_STATUS, &success);
@@ -103,32 +103,28 @@ Application::~Application() {
 }
 
 void Application::initialise() {
-  const float vertices[] = {
-      0.5f,  0.5f,  0.0f, // top right
-      0.5f,  -0.5f, 0.0f, // bottom right
-      -0.5f, -0.5f, 0.0f, // bottom left
-      -0.5f, 0.5f,  0.0f  // top left
-  };
-  const unsigned int indices[] = {
-      // note that we start from 0!
-      0, 1, 3, // first triangle
-      1, 2, 3  // second triangle
+  float vertices[] = {
+      // positions         // colors
+      0.5f,  -0.5f, 0.0f, 1.0f, 0.0f, 0.0f, // bottom right
+      -0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, // bottom left
+      0.0f,  0.5f,  0.0f, 0.0f, 0.0f, 1.0f  // top
   };
 
   glGenVertexArrays(1, &VAO);
   glGenBuffers(1, &VBO);
-  glGenBuffers(1, &EBO);
 
   glBindVertexArray(VAO);
 
   glBindBuffer(GL_ARRAY_BUFFER, VBO);
   glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
-  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-  glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices,
-               GL_STATIC_DRAW);
-
-  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), nullptr);
+  // position attribute
+  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void *)0);
+  glEnableVertexAttribArray(0);
+  // color attribute
+  glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float),
+                        (void *)(3 * sizeof(float)));
+  glEnableVertexAttribArray(1);
   glEnableVertexAttribArray(0);
 
   glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -140,21 +136,22 @@ void Application::run() {
   while (!glfwWindowShouldClose(m_window)) {
     process_input(m_window);
 
-    glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+    glClearColor(k_bg_colour[0], k_bg_colour[1], k_bg_colour[2],
+                 k_bg_colour[3]);
     glClear(GL_COLOR_BUFFER_BIT);
 
     const auto current_time = std::chrono::system_clock::now();
-    const auto run_time = std::chrono::duration_cast<std::chrono::seconds>(
+    const auto run_time = std::chrono::duration_cast<std::chrono::milliseconds>(
                               current_time - m_start_time)
                               .count();
 
-    const auto sin = 0.5 + std::sin(run_time) / 2.0f;
+    const auto sin = std::sin(run_time / 1000.0f) / 2.0f + 0.5f;
     const auto vertex_location = glGetUniformLocation(m_program, "ourColour");
     glUseProgram(m_program);
     glUniform4f(vertex_location, 1.0, sin, 0.3, 1.0);
 
     glBindVertexArray(VAO);
-    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+    glDrawArrays(GL_TRIANGLES, 0, 3);
 
     glfwSwapBuffers(m_window);
     glfwPollEvents();
