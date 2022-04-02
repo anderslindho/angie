@@ -27,6 +27,26 @@ Shader::Shader(const std::string &vertex, const std::string &fragment)
   glDeleteShader(fragment_shader);
 }
 
+void Shader::set_bool(const std::string &name, const bool val) const {
+  const auto location = glGetUniformLocation(m_id, name.c_str());
+  glUniform1i(location, static_cast<int>(val));
+}
+
+void Shader::set_int(const std::string &name, const int val) const {
+  const auto location = glGetUniformLocation(m_id, name.c_str());
+  glUniform1i(location, val);
+}
+
+void Shader::set_float(const std::string &name, const float val) const {
+  const auto location = glGetUniformLocation(m_id, name.c_str());
+  glUniform1f(location, val);
+}
+
+void Shader::set_vec3(const std::string &name, const glm::vec3 &val) const {
+  const auto location = glGetUniformLocation(m_id, name.c_str());
+  glUniform3fv(location, 1, &val[0]);
+}
+
 void Shader::set_vec3(const std::string &name, const float x, const float y,
                       const float z) const {
   const auto location = glGetUniformLocation(m_id, name.c_str());
