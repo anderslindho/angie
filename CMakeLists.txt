@@ -30,7 +30,7 @@ endif()
 find_package(OpenGL REQUIRED)
 include_directories(${OPENGL_INCLUDE_DIR})
 
-include(cmake/LoadLibs.cmake)
+include(cmake/includes.cmake)
 
 target_link_libraries(
   ${PROJECT_NAME}
