@@ -24,6 +24,8 @@ public:
   void set_bool(const std::string &name, const bool val);
   void set_int(const std::string &name, const int val);
   void set_float(const std::string &name, const float val);
+  void set_vec2(const std::string &name, const glm::vec2 &val);
+  void set_vec2(const std::string &name, const float v0, const float v1, const float v2);
   void set_vec3(const std::string &name, const glm::vec3 &val);
   void set_vec3(const std::string &name, const float v0, const float v1,
                 const float v2);
