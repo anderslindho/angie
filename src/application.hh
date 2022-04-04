@@ -8,7 +8,7 @@
 struct Application {
 private:
   GLFWwindow *m_window;
-  unsigned int VBO, VAO, EBO;
+  unsigned int VBO, VAO, TBO, EBO; // temporary members
   std::chrono::time_point<std::chrono::system_clock> m_start_time;
 
 public:
