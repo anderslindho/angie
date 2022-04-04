@@ -22,5 +22,8 @@ set(GLM_DIR ${EXTERN_DIR}/glm)
 add_subdirectory(${GLM_DIR})
 target_include_directories(glm PRIVATE ${GLM_INCLUDE_DIRS})
 
+set(STB_DIR ${LIB_DIR}/stb)
+target_include_directories(${PROJECT_NAME} PRIVATE ${STB_DIR}/include)
+
 set(SPDLOG_DIR ${EXTERN_DIR}/spdlog)
 add_subdirectory(${SPDLOG_DIR})
