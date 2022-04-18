@@ -138,7 +138,7 @@ void Application::run() {
                               .count();
 
     const auto wave = std::sin(run_time / 1000.0f) / 2.5f + 0.6f;
-    program.set_vec3("modifier", glm::vec3(wave, wave, wave));
+    program.set_vec3("u_modifier", glm::vec3(wave, wave, wave));
 
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
     glfwSwapBuffers(m_window);
