@@ -35,7 +35,7 @@ include(cmake/includes.cmake)
 target_link_libraries(
   ${PROJECT_NAME}
   glfw ${GLFW_LIBRARIES}
-  glad ${CMAKE_DL_LIBS}
+  glbinding::glbinding
   glm
   spdlog
 )

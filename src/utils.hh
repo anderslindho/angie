@@ -3,11 +3,11 @@
 #include <spdlog/spdlog.h>
 
 #include <GLFW/glfw3.h>
-#include <glad/glad.h>
+#include <glbinding/gl/gl.h>
 
 void framebuffer_size_callback(GLFWwindow * /* window */, int width,
                                int height) {
-  glViewport(0, 0, width, height);
+  gl::glViewport(0, 0, width, height);
 }
 
 void process_input(GLFWwindow *window) {
@@ -15,25 +15,28 @@ void process_input(GLFWwindow *window) {
     glfwSetWindowShouldClose(window, true);
 }
 
-GLenum check_error_(const char *file, int line) {
-  GLenum error_code;
-  while ((error_code = glGetError()) != GL_NO_ERROR) {
+gl::GLenum check_error_(const char *file, int line) {
+  gl::GLenum error_code;
+  while ((error_code = gl::glGetError()) != GL_NO_ERROR) {
     std::string error;
     switch (error_code) {
-    case GL_INVALID_ENUM:
+    case gl::GL_INVALID_ENUM:
       error = "INVALID_ENUM";
       break;
-    case GL_INVALID_VALUE:
+    case gl::GL_INVALID_VALUE:
       error = "INVALID_VALUE";
       break;
-    case GL_INVALID_OPERATION:
+    case gl::GL_INVALID_OPERATION:
       error = "INVALID_OPERATION";
       break;
-    case GL_OUT_OF_MEMORY:
+    case gl::GL_OUT_OF_MEMORY:
       error = "OUT_OF_MEMORY";
       break;
-    case GL_INVALID_FRAMEBUFFER_OPERATION:
+    case gl::GL_INVALID_FRAMEBUFFER_OPERATION:
       error = "INVALID_FRAMEBUFFER_OPERATION";
+      break;
+    default:
+      error = "UNKNOWN";
       break;
     }
     spdlog::error("GL {} | {}:{}", error, file, line);

@@ -3,7 +3,8 @@
 #include <chrono>
 
 #include <GLFW/glfw3.h>
-#include <glad/glad.h>
+#include <glbinding/gl/gl.h>
+using namespace gl;
 
 struct Application {
 private:

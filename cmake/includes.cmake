@@ -13,10 +13,8 @@ set(GLFW_INSTALL
     CACHE BOOL "Generate installation target")
 add_subdirectory(${GLFW_DIR})
 
-set(GLAD_DIR ${LIB_DIR}/glad)
-add_library(glad ${GLAD_DIR}/src/glad.c)
-target_include_directories(glad PRIVATE ${GLAD_DIR}/include)
-target_include_directories(${PROJECT_NAME} PRIVATE ${GLAD_DIR}/include)
+set(GLBINDING_DIR ${EXTERN_DIR}/glbinding)
+add_subdirectory(${GLBINDING_DIR})
 
 set(GLM_DIR ${EXTERN_DIR}/glm)
 add_subdirectory(${GLM_DIR})

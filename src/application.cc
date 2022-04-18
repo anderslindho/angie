@@ -8,6 +8,8 @@
 
 #include <spdlog/spdlog.h>
 
+#include <glbinding/glbinding.h>
+
 #include <glm/glm.hpp>
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb/stb_image.h>
@@ -25,7 +27,7 @@ Application::Application(const unsigned int width, const unsigned int height) {
     glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, true);
 
 #ifdef __APPLE__
-    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, true);
 #endif
 
     auto window = glfwCreateWindow(w, h, "angie", nullptr, nullptr);
@@ -38,12 +40,7 @@ Application::Application(const unsigned int width, const unsigned int height) {
     glfwMakeContextCurrent(window);
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
-    if (!gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress))) {
-      spdlog::error("Failed on init glad");
-      glfwTerminate();
-      glfwDestroyWindow(window);
-      std::exit(EXIT_FAILURE);
-    }
+    glbinding::initialize(glfwGetProcAddress);
     auto gl_version = std::string(reinterpret_cast<const char*>(glGetString(GL_VERSION)));
     spdlog::info("OpenGL {}", gl_version);
 

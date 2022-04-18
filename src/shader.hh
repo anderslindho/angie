@@ -4,7 +4,7 @@
 #include <unordered_map>
 
 #include <GLFW/glfw3.h>
-#include <glad/glad.h>
+#include <glbinding/gl/gl.h>
 
 #include <glm/glm.hpp>
 
@@ -16,10 +16,10 @@ private:
 
 public:
   Shader(const std::string &vertex, const std::string &fragment);
-  ~Shader() { glDeleteProgram(m_id); }
+  ~Shader() { gl::glDeleteProgram(m_id); }
   unsigned int get_id() const { return m_id; }
 
-  void use() const { glUseProgram(m_id); }
+  void use() const { gl::glUseProgram(m_id); }
 
   void set_bool(const std::string &name, const bool val);
   void set_int(const std::string &name, const int val);
@@ -32,6 +32,6 @@ public:
 
 private:
   int get_uniform_location(const std::string &name);
-  unsigned int compile_shader(unsigned int type, const std::string &path) const;
+  unsigned int compile_shader(const gl::GLenum type, const std::string &path) const;
   const std::string read_file(const std::string &path) const;
 };
