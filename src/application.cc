@@ -22,6 +22,7 @@ Application::Application(const unsigned int width, const unsigned int height) {
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, true);
 
 #ifdef __APPLE__
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
@@ -50,6 +51,7 @@ Application::~Application() {
   glDeleteVertexArrays(1, &VAO);
   glDeleteBuffers(1, &VBO);
   glDeleteBuffers(1, &EBO);
+  glDeleteTextures(1, &TBO);
 
   if (m_window)
     glfwDestroyWindow(m_window);
@@ -64,7 +66,7 @@ Application::~Application() {
 
 void Application::initialise() {
   float vertices[] = {
-      // positions          // colors           // texture coords
+      // positions        // colors         // texture coords
       0.5f,  0.5f,  0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, // top right
       0.5f,  -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, // bottom right
       -0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, // bottom left
@@ -112,17 +114,14 @@ void Application::initialise() {
                         (void *)(6 * sizeof(float)));
   glEnableVertexAttribArray(2);
 
-  glEnableVertexAttribArray(0);
-
   glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-  glBindVertexArray(0);
 
   stbi_image_free(image_data);
 }
 
 void Application::run() {
-  Shader program("res/shaders/vertex.glsl", "res/shaders/fragment.glsl");
+  Shader program("res/shaders/basic.vert", "res/shaders/basic.frag");
+  program.use();
   while (!glfwWindowShouldClose(m_window)) {
     process_input(m_window);
 
@@ -135,14 +134,12 @@ void Application::run() {
                               .count();
 
     const auto wave = std::sin(run_time / 1000.0f) / 2.5f + 0.6f;
-    program.use();
     program.set_vec3("modifier", glm::vec3(wave, wave, wave));
 
-    glBindTexture(GL_TEXTURE_2D, VBO);
-    glBindVertexArray(VAO);
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-
     glfwSwapBuffers(m_window);
     glfwPollEvents();
+
+    glCheckError();
   }
 }

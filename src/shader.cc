@@ -45,8 +45,8 @@ void Shader::set_vec2(const std::string &name, const glm::vec2 &val) {
   glUniform2fv(get_uniform_location(name), 1, &val[0]);
 }
 
-void set_vec2(const std::string &name, const float v0, const float v1, const float v2) {
-  glUniform3f(get_uniform_location(name), v0, v1);
+void Shader::set_vec2(const std::string &name, const float v0, const float v1) {
+  glUniform2f(get_uniform_location(name), v0, v1);
 }
 
 void Shader::set_vec3(const std::string &name, const glm::vec3 &val) {
