@@ -27,9 +27,6 @@ else()
                                                  -Werror)
 endif()
 
-find_package(OpenGL REQUIRED)
-include_directories(${OPENGL_INCLUDE_DIR})
-
 include(cmake/includes.cmake)
 
 target_link_libraries(
