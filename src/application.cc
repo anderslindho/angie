@@ -34,6 +34,7 @@ Application::Application(const unsigned int width, const unsigned int height) {
       glfwTerminate();
       std::exit(EXIT_FAILURE);
     }
+    spdlog::info("GLFW {}", glfwGetVersionString());
     glfwMakeContextCurrent(window);
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
@@ -43,6 +44,9 @@ Application::Application(const unsigned int width, const unsigned int height) {
       glfwDestroyWindow(window);
       std::exit(EXIT_FAILURE);
     }
+    auto gl_version = std::string(reinterpret_cast<const char*>(glGetString(GL_VERSION)));
+    spdlog::info("OpenGL {}", gl_version);
+
     return window;
   }(width, height);
 }
