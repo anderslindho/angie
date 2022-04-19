@@ -15,7 +15,11 @@ set(SRC_DIR src)
 set(LIB_DIR libs)
 set(EXTERN_DIR extern)
 
-file(GLOB SRCS ${SRC_DIR}/*.cc)
+set(SRCS
+  ${SRC_DIR}/main.cc
+  ${SRC_DIR}/application.cc
+  ${SRC_DIR}/shader.cc
+  )
 
 add_executable(${PROJECT_NAME} ${SRCS})
 
