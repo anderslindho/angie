@@ -12,7 +12,6 @@ Shader::Shader(const std::string &vertex, const std::string &fragment)
 
   const auto vertex_shader = compile_shader(gl::GL_VERTEX_SHADER, vertex);
   const auto fragment_shader = compile_shader(gl::GL_FRAGMENT_SHADER, fragment);
-
   m_id = gl::glCreateProgram();
   gl::glAttachShader(m_id, vertex_shader);
   gl::glAttachShader(m_id, fragment_shader);
@@ -24,7 +23,6 @@ Shader::Shader(const std::string &vertex, const std::string &fragment)
   } else {
     spdlog::debug("Created shader program from {} and {}", vertex, fragment);
   }
-
   gl::glDeleteShader(vertex_shader);
   gl::glDeleteShader(fragment_shader);
 }

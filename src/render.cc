@@ -105,5 +105,6 @@ void Renderer::prepare() const {
 void Renderer::render() const {
   gl::glBindVertexArray(m_VAO);
   gl::glDrawElements(gl::GL_TRIANGLES, 6, gl::GL_UNSIGNED_INT, 0);
-  check_error();
+  check_error(); // simplistic usage; basically just wipes the error stack but
+                 // does, however, occasionally catch stuff
 }

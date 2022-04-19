@@ -48,23 +48,20 @@ void Application::run() const {
 
   while (!glfwWindowShouldClose(m_window)) {
     m_renderer->prepare();
+    program.use();
     {
-      program.use();
-      const auto current_time = std::chrono::system_clock::now();
       const auto run_time =
-          std::chrono::duration_cast<std::chrono::milliseconds>(current_time -
-                                                                m_start_time)
+          std::chrono::duration_cast<std::chrono::milliseconds>(
+              std::chrono::system_clock::now() - m_start_time)
               .count();
-
       const auto wave = std::sin(run_time / 1000.0f) / 2.5f + 0.6f;
       program.set_vec3("u_modifier", glm::vec3(wave, wave, wave));
     }
     m_renderer->render();
-    {
-      process_input(m_window);
-      glfwSwapBuffers(m_window);
-      glfwPollEvents();
-    }
+
+    process_input(m_window);
+    glfwSwapBuffers(m_window);
+    glfwPollEvents();
   }
 }
 
@@ -73,9 +70,8 @@ Application::~Application() {
     glfwDestroyWindow(m_window);
   glfwTerminate();
 
-  const auto current_time = std::chrono::system_clock::now();
   const auto run_time = std::chrono::duration_cast<std::chrono::seconds>(
-                            current_time - m_start_time)
+                            std::chrono::system_clock::now() - m_start_time)
                             .count();
   spdlog::info("Program ran for {} seconds.", run_time);
 }
