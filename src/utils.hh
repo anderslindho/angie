@@ -17,7 +17,7 @@ void process_input(GLFWwindow *window) {
 
 gl::GLenum check_error_(const char *file, int line) {
   gl::GLenum error_code;
-  while ((error_code = gl::glGetError()) != GL_NO_ERROR) {
+  while ((error_code = gl::glGetError()) != gl::GL_NO_ERROR) {
     std::string error;
     switch (error_code) {
     case gl::GL_INVALID_ENUM:

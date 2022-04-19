@@ -41,28 +41,11 @@ Application::Application(const unsigned int width, const unsigned int height) {
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
     glbinding::initialize(glfwGetProcAddress);
-    auto gl_version = std::string(reinterpret_cast<const char*>(glGetString(GL_VERSION)));
+    auto gl_version = std::string(reinterpret_cast<const char*>(gl::glGetString(gl::GL_VERSION)));
     spdlog::info("OpenGL {}", gl_version);
 
     return window;
   }(width, height);
-}
-
-Application::~Application() {
-  glDeleteVertexArrays(1, &VAO);
-  glDeleteBuffers(1, &VBO);
-  glDeleteBuffers(1, &EBO);
-  glDeleteTextures(1, &TBO);
-
-  if (m_window)
-    glfwDestroyWindow(m_window);
-  glfwTerminate();
-
-  const auto current_time = std::chrono::system_clock::now();
-  const auto run_time = std::chrono::duration_cast<std::chrono::seconds>(
-                            current_time - m_start_time)
-                            .count();
-  spdlog::info("Program ran for {} seconds.", run_time);
 }
 
 void Application::initialise() {
@@ -84,38 +67,38 @@ void Application::initialise() {
   if (!image_data)
     spdlog::error("Failed to load image {}", image);
 
-  glGenVertexArrays(1, &VAO);
-  glGenBuffers(1, &VBO);
-  glGenBuffers(1, &EBO);
-  glGenTextures(1, &TBO);
+  gl::glGenVertexArrays(1, &VAO);
+  gl::glGenBuffers(1, &VBO);
+  gl::glGenBuffers(1, &EBO);
+  gl::glGenTextures(1, &TBO);
 
-  glBindVertexArray(VAO);
+  gl::glBindVertexArray(VAO);
 
-  glBindBuffer(GL_ARRAY_BUFFER, VBO);
-  glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+  gl::glBindBuffer(gl::GL_ARRAY_BUFFER, VBO);
+  gl::glBufferData(gl::GL_ARRAY_BUFFER, sizeof(vertices), vertices, gl::GL_STATIC_DRAW);
 
-  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-  glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices,
-               GL_STATIC_DRAW);
+  gl::glBindBuffer(gl::GL_ELEMENT_ARRAY_BUFFER, EBO);
+  gl::glBufferData(gl::GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices,
+               gl::GL_STATIC_DRAW);
 
-  glBindTexture(GL_TEXTURE_2D, TBO);
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, image_width, image_height, 0, GL_RGB,
-               GL_UNSIGNED_BYTE, image_data);
-  glGenerateMipmap(GL_TEXTURE_2D);
+  gl::glBindTexture(gl::GL_TEXTURE_2D, TBO);
+  gl::glTexImage2D(gl::GL_TEXTURE_2D, 0, gl::GL_RGB, image_width, image_height, 0, gl::GL_RGB,
+               gl::GL_UNSIGNED_BYTE, image_data);
+  gl::glGenerateMipmap(gl::GL_TEXTURE_2D);
 
   // position attribute
-  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void *)0);
-  glEnableVertexAttribArray(0);
+  gl::glVertexAttribPointer(0, 3, gl::GL_FLOAT, gl::GL_FALSE, 8 * sizeof(float), (void *)0);
+  gl::glEnableVertexAttribArray(0);
   // color attribute
-  glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float),
+  gl::glVertexAttribPointer(1, 3, gl::GL_FLOAT, gl::GL_FALSE, 8 * sizeof(float),
                         (void *)(3 * sizeof(float)));
-  glEnableVertexAttribArray(1);
+  gl::glEnableVertexAttribArray(1);
   // texture attribute
-  glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float),
+  gl::glVertexAttribPointer(2, 2, gl::GL_FLOAT, gl::GL_FALSE, 8 * sizeof(float),
                         (void *)(6 * sizeof(float)));
-  glEnableVertexAttribArray(2);
+  gl::glEnableVertexAttribArray(2);
 
-  glBindBuffer(GL_ARRAY_BUFFER, 0);
+  gl::glBindBuffer(gl::GL_ARRAY_BUFFER, 0);
 
   stbi_image_free(image_data);
 }
@@ -126,8 +109,8 @@ void Application::run() {
   while (!glfwWindowShouldClose(m_window)) {
     process_input(m_window);
 
-    glClearColor(0.1f, 0.1f, 0.2f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT);
+    gl::glClearColor(0.1f, 0.1f, 0.2f, 1.0f);
+    gl::glClear(gl::GL_COLOR_BUFFER_BIT);
 
     const auto current_time = std::chrono::system_clock::now();
     const auto run_time = std::chrono::duration_cast<std::chrono::milliseconds>(
@@ -137,10 +120,28 @@ void Application::run() {
     const auto wave = std::sin(run_time / 1000.0f) / 2.5f + 0.6f;
     program.set_vec3("u_modifier", glm::vec3(wave, wave, wave));
 
-    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+    gl::glDrawElements(gl::GL_TRIANGLES, 6, gl::GL_UNSIGNED_INT, 0);
+
     glfwSwapBuffers(m_window);
     glfwPollEvents();
 
     glCheckError();
   }
+}
+
+Application::~Application() {
+  gl::glDeleteVertexArrays(1, &VAO);
+  gl::glDeleteBuffers(1, &VBO);
+  gl::glDeleteBuffers(1, &EBO);
+  gl::glDeleteTextures(1, &TBO);
+
+  if (m_window)
+    glfwDestroyWindow(m_window);
+  glfwTerminate();
+
+  const auto current_time = std::chrono::system_clock::now();
+  const auto run_time = std::chrono::duration_cast<std::chrono::seconds>(
+                            current_time - m_start_time)
+                            .count();
+  spdlog::info("Program ran for {} seconds.", run_time);
 }
