@@ -9,7 +9,7 @@
 struct Application {
 private:
   GLFWwindow *m_window;
-  Renderer *m_renderer;
+  std::unique_ptr<Renderer> m_renderer;
   std::chrono::time_point<std::chrono::system_clock> m_start_time;
 
 public:

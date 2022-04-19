@@ -15,10 +15,9 @@ int main(int argc, char **argv) {
     width = k_width;
     height = k_height;
   }
+
   auto app = new Application(width, height);
-
   app->run();
-
   delete app;
   std::exit(EXIT_SUCCESS);
 }

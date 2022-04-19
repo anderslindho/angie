@@ -4,6 +4,7 @@
 #include <cmath>
 #include <cstdlib>
 #include <iostream>
+#include <memory>
 #include <string>
 
 #include <glbinding/glbinding.h>
@@ -12,7 +13,6 @@
 #include "utils.hh"
 
 Application::Application(const unsigned int width, const unsigned int height) {
-  m_start_time = std::chrono::system_clock::now();
   m_window = [](const int w, const int h) {
     glfwInit();
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
@@ -22,7 +22,6 @@ Application::Application(const unsigned int width, const unsigned int height) {
 #ifdef __APPLE__
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, true);
 #endif
-
     auto window = glfwCreateWindow(w, h, "angie", nullptr, nullptr);
     if (!window) {
       spdlog::error("Failed to init window");
@@ -30,7 +29,6 @@ Application::Application(const unsigned int width, const unsigned int height) {
       std::exit(EXIT_FAILURE);
     }
     spdlog::info("GLFW {}", glfwGetVersionString());
-
     glfwMakeContextCurrent(window);
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
@@ -41,35 +39,36 @@ Application::Application(const unsigned int width, const unsigned int height) {
 
     return window;
   }(width, height);
-  m_renderer = new Renderer();
+  m_renderer = std::make_unique<Renderer>();
+  m_start_time = std::chrono::system_clock::now();
 }
 
 void Application::run() const {
   Shader program("res/shaders/basic.vert", "res/shaders/basic.frag");
-  program.use();
+
   while (!glfwWindowShouldClose(m_window)) {
-    process_input(m_window);
-
     m_renderer->prepare();
+    {
+      program.use();
+      const auto current_time = std::chrono::system_clock::now();
+      const auto run_time =
+          std::chrono::duration_cast<std::chrono::milliseconds>(current_time -
+                                                                m_start_time)
+              .count();
 
-    const auto current_time = std::chrono::system_clock::now();
-    const auto run_time = std::chrono::duration_cast<std::chrono::milliseconds>(
-                              current_time - m_start_time)
-                              .count();
-
-    const auto wave = std::sin(run_time / 1000.0f) / 2.5f + 0.6f;
-    program.set_vec3("u_modifier", glm::vec3(wave, wave, wave));
-
+      const auto wave = std::sin(run_time / 1000.0f) / 2.5f + 0.6f;
+      program.set_vec3("u_modifier", glm::vec3(wave, wave, wave));
+    }
     m_renderer->render();
-
-    glfwSwapBuffers(m_window);
-    glfwPollEvents();
+    {
+      process_input(m_window);
+      glfwSwapBuffers(m_window);
+      glfwPollEvents();
+    }
   }
 }
 
 Application::~Application() {
-  if (m_renderer)
-    delete m_renderer;
   if (m_window)
     glfwDestroyWindow(m_window);
   glfwTerminate();
