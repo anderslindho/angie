@@ -82,7 +82,8 @@ unsigned int Shader::compile_shader(const gl::GLenum type,
   if (!success) {
     gl::glGetShaderInfoLog(shader, 512, nullptr, info_log);
     spdlog::error("Failed to compile shader {}: {}",
-                  type == gl::GL_VERTEX_SHADER ? "vertex" : "fragment", info_log);
+                  type == gl::GL_VERTEX_SHADER ? "vertex" : "fragment",
+                  info_log);
   }
   return shader;
 }

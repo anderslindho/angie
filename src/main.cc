@@ -17,7 +17,6 @@ int main(int argc, char **argv) {
   }
   auto app = new Application(width, height);
 
-  app->initialise();
   app->run();
 
   delete app;

@@ -32,6 +32,7 @@ public:
 
 private:
   int get_uniform_location(const std::string &name);
-  unsigned int compile_shader(const gl::GLenum type, const std::string &path) const;
+  unsigned int compile_shader(const gl::GLenum type,
+                              const std::string &path) const;
   const std::string read_file(const std::string &path) const;
 };
