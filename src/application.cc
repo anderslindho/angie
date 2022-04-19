@@ -8,6 +8,9 @@
 #include <string>
 
 #include <glbinding/glbinding.h>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 #include "shader.hh"
 #include "utils.hh"
@@ -57,6 +60,17 @@ void Application::run() const {
       const auto wave = std::sin(run_time / 1000.0f) / 2.5f + 0.6f;
       program.set_vec3("u_modifier", glm::vec3(wave, wave, wave));
     }
+
+    {
+      glm::mat4 trans = glm::mat4(1.0f);
+      glm::mat4 view = glm::mat4(1.0f);
+      trans = glm::rotate(trans, glm::radians(90.0f), glm::vec3(0.0, 0.0, 1.0));
+      trans = glm::scale(trans, glm::vec3(0.5, 0.5, 0.5));
+      view = glm::translate(view, glm::vec3(0.0f, 1.0f, -1.0f));
+      program.set_mat4("u_model", trans);
+      program.set_mat4("u_view", view);
+    }
+
     m_renderer->render();
 
     process_input(m_window);

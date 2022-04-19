@@ -56,6 +56,16 @@ void Shader::set_vec3(const std::string &name, const float v0, const float v1,
   gl::glUniform3f(get_uniform_location(name), v0, v1, v2);
 }
 
+void Shader::set_mat3(const std::string &name, const glm::mat3 &val) {
+  gl::glUniformMatrix3fv(get_uniform_location(name), 1, gl::GL_FALSE,
+                         &val[0][0]);
+}
+
+void Shader::set_mat4(const std::string &name, const glm::mat4 &val) {
+  gl::glUniformMatrix4fv(get_uniform_location(name), 1, gl::GL_FALSE,
+                         &val[0][0]);
+}
+
 int Shader::get_uniform_location(const std::string &name) {
   if (m_cache.find(name) != m_cache.end()) {
     return m_cache[name];

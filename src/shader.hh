@@ -29,6 +29,8 @@ public:
   void set_vec3(const std::string &name, const glm::vec3 &val);
   void set_vec3(const std::string &name, const float v0, const float v1,
                 const float v2);
+  void set_mat3(const std::string &name, const glm::mat3 &val);
+  void set_mat4(const std::string &name, const glm::mat4 &val);
 
 private:
   int get_uniform_location(const std::string &name);
