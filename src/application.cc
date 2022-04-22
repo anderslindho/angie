@@ -33,6 +33,14 @@ Application::Application(const unsigned int width, const unsigned int height) {
     }
     spdlog::info("GLFW {}", glfwGetVersionString());
     glfwMakeContextCurrent(window);
+
+    /* necessary to redefine the (global) callbacks
+       retrieve with
+       reinterpret_cast<Window*>(glfwGetWindowUserPointer(window)); see
+       https://stackoverflow.com/questions/27387040/referencing-glfws-callback-functions-from-a-class
+     */
+    // glfwSetWindowUserPointer(window, reinterpret_cast<void*>(this));
+
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
     glbinding::initialize(glfwGetProcAddress);
@@ -43,6 +51,7 @@ Application::Application(const unsigned int width, const unsigned int height) {
     return window;
   }(width, height);
   m_renderer = std::make_unique<Renderer>();
+  // m_camera = std::make_unique<Camera>();
   m_start_time = std::chrono::system_clock::now();
 }
 
@@ -62,13 +71,15 @@ void Application::run() const {
     }
 
     {
-      glm::mat4 trans = glm::mat4(1.0f);
-      glm::mat4 view = glm::mat4(1.0f);
-      trans = glm::rotate(trans, glm::radians(90.0f), glm::vec3(0.0, 0.0, 1.0));
-      trans = glm::scale(trans, glm::vec3(0.5, 0.5, 0.5));
-      view = glm::translate(view, glm::vec3(0.0f, 1.0f, -1.0f));
-      program.set_mat4("u_model", trans);
+      glm::mat4 identity = glm::mat4(1.0f);
+      glm::mat4 model = glm::rotate(identity, glm::radians(-55.0f),
+                                    glm::vec3(1.0f, 0.0f, 0.0f));
+      glm::mat4 view = glm::translate(identity, glm::vec3(0.0f, 0.0f, -3.0f));
+      glm::mat4 projection =
+          glm::perspective(glm::radians(45.0f), 800.0f / 640.0f, 0.1f, 100.0f);
+      program.set_mat4("u_model", model);
       program.set_mat4("u_view", view);
+      program.set_mat4("u_projection", projection);
     }
 
     m_renderer->render();
