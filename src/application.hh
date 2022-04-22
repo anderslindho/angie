@@ -1,10 +1,11 @@
 #pragma once
 
 #include <chrono>
+#include <memory>
 
 #include <GLFW/glfw3.h>
 
-#include "render.hh"
+class Renderer;
 
 struct Application {
 private:

@@ -17,8 +17,8 @@ private:
 public:
   Shader(const std::string &vertex, const std::string &fragment);
   ~Shader() { gl::glDeleteProgram(m_id); }
-  unsigned int get_id() const { return m_id; }
 
+  unsigned int get_id() const { return m_id; }
   void use() const { gl::glUseProgram(m_id); }
 
   void set_bool(const std::string &name, const bool val);

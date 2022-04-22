@@ -7,8 +7,8 @@ private:
   // const unsigned int m_id;
   unsigned int m_VBO, m_VAO, m_TBO, m_EBO; // temporary members
 public:
-  Renderer();
-  ~Renderer();
+  Renderer();  // temporary ctor
+  ~Renderer(); // temporary dtor
 
   void prepare() const;
   void render() const;
