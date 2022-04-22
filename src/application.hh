@@ -15,6 +15,10 @@ private:
 
 public:
   Application(const unsigned int width, const unsigned int height);
+  Application(const Application &) = delete;
+  Application &operator=(const Application &) = delete;
+  Application(Application &&) = delete;
+  Application &operator=(Application &&) = delete;
   ~Application();
 
   void run() const;
