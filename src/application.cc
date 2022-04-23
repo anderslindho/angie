@@ -61,20 +61,20 @@ void Application::run() const {
 
   while (!glfwWindowShouldClose(m_window)) {
     m_renderer->prepare();
-    program.use();
+
     {
+      program.use();
       const auto run_time =
           std::chrono::duration_cast<std::chrono::milliseconds>(
               std::chrono::system_clock::now() - m_start_time)
               .count();
-      const auto wave = std::sin(run_time / 1000.0f) / 2.5f + 0.6f;
+      const auto wave = std::sin(run_time / 1000.f) / 2.5f + 0.6f;
       program.set_vec3("u_modifier", glm::vec3(wave, wave, wave));
-    }
 
-    {
       glm::mat4 identity = glm::mat4(1.0f);
-      glm::mat4 model = glm::rotate(identity, glm::radians(-55.0f),
-                                    glm::vec3(1.0f, 0.0f, 0.0f));
+      glm::mat4 model =
+          glm::rotate(identity, glm::radians(-55.0f * run_time / 1000.f),
+                      glm::vec3(1.0f, 0.0f, 0.0f));
       glm::mat4 view = glm::translate(identity, glm::vec3(0.0f, 0.0f, -3.0f));
       glm::mat4 projection =
           glm::perspective(glm::radians(45.0f), 800.0f / 640.0f, 0.1f, 100.0f);
