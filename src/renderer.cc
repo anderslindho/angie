@@ -1,5 +1,7 @@
 #include "renderer.hh"
 
+#include <vector>
+
 #include <spdlog/spdlog.h>
 
 #define STB_IMAGE_IMPLEMENTATION
@@ -36,14 +38,14 @@ gl::GLenum check_error_(const char *file, int line) {
 #define check_error() check_error_(__FILE__, __LINE__)
 
 Renderer::Renderer() {
-  float vertices[] = {
+  std::vector<float> vertices = {
       // positions        // colors         // texture coords
       0.5f,  0.5f,  0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, // top right
       0.5f,  -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, // bottom right
       -0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, // bottom left
       -0.5f, 0.5f,  0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f  // top left
   };
-  unsigned int indices[] = {
+  std::vector<unsigned int> indices = {
       0, 1, 3, // first triangle
       1, 2, 3  // second triangle
   };
@@ -62,11 +64,11 @@ Renderer::Renderer() {
   gl::glBindVertexArray(m_VAO);
 
   gl::glBindBuffer(gl::GL_ARRAY_BUFFER, m_VBO);
-  gl::glBufferData(gl::GL_ARRAY_BUFFER, sizeof(vertices), vertices,
+  gl::glBufferData(gl::GL_ARRAY_BUFFER, vertices.size() * sizeof(float), &vertices.front(),
                    gl::GL_STATIC_DRAW);
 
   gl::glBindBuffer(gl::GL_ELEMENT_ARRAY_BUFFER, m_EBO);
-  gl::glBufferData(gl::GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices,
+  gl::glBufferData(gl::GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), &indices.front(),
                    gl::GL_STATIC_DRAW);
 
   gl::glBindTexture(gl::GL_TEXTURE_2D, m_TBO);
