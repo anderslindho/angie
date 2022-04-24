@@ -5,7 +5,6 @@
 #include <cstdlib>
 #include <iostream>
 #include <memory>
-#include <string>
 
 #include <glbinding/glbinding.h>
 #include <glm/glm.hpp>
@@ -17,7 +16,10 @@
 #include "shader.hh"
 
 Application::Application(const unsigned int width, const unsigned int height,
-                         const std::string &title) {
+                         const std::string &title)
+    : // m_width(width), m_height(height),
+      m_title(title) {
+
   m_window = [](const int w, const int h, const std::string &t) {
     glfwInit();
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
@@ -57,7 +59,7 @@ Application::Application(const unsigned int width, const unsigned int height,
 }
 
 void Application::run() const {
-  Shader program("res/shaders/basic.vert", "res/shaders/basic.frag");
+  // TODO: move out
   std::vector<float> vertices = {
       // positions        // colors         // texture coords
       0.5f,  0.5f,  0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, // top right
@@ -69,7 +71,11 @@ void Application::run() const {
       0, 1, 3, // first triangle
       1, 2, 3  // second triangle
   };
+  Shader program("res/shaders/basic.vert", "res/shaders/basic.frag");
   std::string image = "res/textures/container.jpg";
+  // the order matters here;
+  // need to make sure that vao is bound to both
+  // vbo and tbo
   auto vbo = std::make_unique<VertexBuffer>(vertices);
   auto ebo = std::make_unique<IndexBuffer>(indices);
   auto vao = std::make_unique<VertexAttributes>(8);
@@ -103,8 +109,8 @@ void Application::run() const {
     }
 
     m_renderer->render(vao, ebo);
-
     process_input(m_window);
+
     glfwSwapBuffers(m_window);
     glfwPollEvents();
   }

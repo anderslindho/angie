@@ -2,6 +2,8 @@
 
 #include <cstddef>
 
+// should probably become a `VertexArray` that binds different vb & ib
+// combinations
 class VertexAttributes {
 private:
   unsigned int m_id;
@@ -15,5 +17,10 @@ public:
   VertexAttributes &operator=(const VertexAttributes &) = delete;
 
   void bind() const;
-  void add_attribute(unsigned int index, unsigned int size);
+  // maybe also move ownership ?
+  // void add_buffer(const std::unique_ptr<VertexBuffer> &vb, const
+  // std::unique_ptr<IndexBuffer> &ib);
+
+  void add_attribute(unsigned int index,
+                     unsigned int size); // TODO: turn private
 };

@@ -46,10 +46,12 @@ void Renderer::render(const std::unique_ptr<VertexAttributes> &vao,
   gl::glDrawElements(gl::GL_TRIANGLES, ebo->size(), gl::GL_UNSIGNED_INT, 0);
   check_error(); // simplistic usage; basically just wipes the error stack but
                  // does, however, occasionally catch stuff
+                 // TODO: wrap all GL calls
 }
 
 void framebuffer_size_callback(GLFWwindow * /* window */, int width,
                                int height) {
+  spdlog::info("width: {}, height: {}", width, height);
   gl::glViewport(0, 0, width, height);
 }
 

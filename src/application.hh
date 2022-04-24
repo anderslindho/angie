@@ -2,6 +2,7 @@
 
 #include <chrono>
 #include <memory>
+#include <string>
 
 #include <GLFW/glfw3.h>
 
@@ -12,6 +13,9 @@ private:
   GLFWwindow *m_window;
   // std::unique_ptr<Camera> m_camera;
   std::unique_ptr<Renderer> m_renderer;
+
+  // unsigned int m_width, m_height;
+  std::string m_title;
   std::chrono::time_point<std::chrono::system_clock> m_start_time;
 
 public:
