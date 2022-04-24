@@ -28,9 +28,8 @@ Application::Application(const unsigned int width, const unsigned int height) {
 #endif
     auto window = glfwCreateWindow(w, h, "angie", nullptr, nullptr);
     if (!window) {
-      spdlog::error("Failed to init window");
       glfwTerminate();
-      std::exit(EXIT_FAILURE);
+      throw std::runtime_error("Failed to init window");
     }
     spdlog::info("GLFW {}", glfwGetVersionString());
     glfwMakeContextCurrent(window);
