@@ -4,13 +4,6 @@
 
 #include <spdlog/spdlog.h>
 
-#define STB_IMAGE_IMPLEMENTATION
-#include <stb/stb_image.h>
-
-#include "indexbuffer.hh"
-#include "vertexattributes.hh"
-#include "vertexbuffer.hh"
-
 gl::GLenum check_error_(const char *file, int line) {
   gl::GLenum error_code;
   while ((error_code = gl::glGetError()) != gl::GL_NO_ERROR) {
@@ -53,33 +46,15 @@ Renderer::Renderer() {
       0, 1, 3, // first triangle
       1, 2, 3  // second triangle
   };
-  int image_width, image_height, image_channel_count;
   std::string image = "res/textures/container.jpg";
-  void *image_data = stbi_load(image.c_str(), &image_width, &image_height,
-                               &image_channel_count, 0);
-  if (!image_data)
-    spdlog::error("Failed to load image {}", image);
-
   m_vbo = std::make_unique<VertexBuffer>(vertices);
   m_ebo = std::make_unique<IndexBuffer>(indices);
   m_vao = std::make_unique<VertexAttributes>(8);
-
-  gl::glGenTextures(1, &m_TBO);
-
-  m_vao->bind();
-  gl::glBindTexture(gl::GL_TEXTURE_2D, m_TBO);
-  gl::glTexImage2D(gl::GL_TEXTURE_2D, 0, gl::GL_RGB, image_width, image_height,
-                   0, gl::GL_RGB, gl::GL_UNSIGNED_BYTE, image_data);
-  gl::glGenerateMipmap(gl::GL_TEXTURE_2D);
-
-  stbi_image_free(image_data);
-
   m_vao->add_attribute(0, 3); // position
   m_vao->add_attribute(1, 3); // colour
   m_vao->add_attribute(2, 2); // texture
+  m_texture = std::make_unique<Texture>(image);
 }
-
-Renderer::~Renderer() { gl::glDeleteTextures(1, &m_TBO); }
 
 void Renderer::prepare() const {
   gl::glClearColor(0.1f, 0.1f, 0.2f, 1.0f);

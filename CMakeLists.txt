@@ -23,6 +23,7 @@ set(SRCS
   ${SRC_DIR}/vertexattributes.cc
   ${SRC_DIR}/indexbuffer.cc
   ${SRC_DIR}/shader.cc
+  ${SRC_DIR}/texture.cc
 )
 
 add_executable(${PROJECT_NAME} ${SRCS})
