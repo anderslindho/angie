@@ -7,6 +7,7 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb/stb_image.h>
 
+#include "indexbuffer.hh"
 #include "vertexbuffer.hh"
 
 gl::GLenum check_error_(const char *file, int line) {
@@ -59,17 +60,12 @@ Renderer::Renderer() {
     spdlog::error("Failed to load image {}", image);
 
   m_vbo = std::make_unique<VertexBuffer>(vertices);
+  m_ebo = std::make_unique<IndexBuffer>(indices);
 
   gl::glGenVertexArrays(1, &m_VAO);
-  gl::glGenBuffers(1, &m_EBO);
   gl::glGenTextures(1, &m_TBO);
 
   gl::glBindVertexArray(m_VAO);
-
-  gl::glBindBuffer(gl::GL_ELEMENT_ARRAY_BUFFER, m_EBO);
-  gl::glBufferData(gl::GL_ELEMENT_ARRAY_BUFFER,
-                   indices.size() * sizeof(unsigned int), &indices.front(),
-                   gl::GL_STATIC_DRAW);
 
   gl::glBindTexture(gl::GL_TEXTURE_2D, m_TBO);
   gl::glTexImage2D(gl::GL_TEXTURE_2D, 0, gl::GL_RGB, image_width, image_height,
@@ -94,7 +90,6 @@ Renderer::Renderer() {
 
 Renderer::~Renderer() {
   gl::glDeleteVertexArrays(1, &m_VAO);
-  gl::glDeleteBuffers(1, &m_EBO);
   gl::glDeleteTextures(1, &m_TBO);
 }
 
@@ -105,7 +100,8 @@ void Renderer::prepare() const {
 
 void Renderer::render() const {
   gl::glBindVertexArray(m_VAO);
-  gl::glDrawElements(gl::GL_TRIANGLES, 6, gl::GL_UNSIGNED_INT, 0);
+  m_ebo->bind();
+  gl::glDrawElements(gl::GL_TRIANGLES, m_ebo->size(), gl::GL_UNSIGNED_INT, 0);
   check_error(); // simplistic usage; basically just wipes the error stack but
                  // does, however, occasionally catch stuff
 }
