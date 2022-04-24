@@ -7,6 +7,8 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb/stb_image.h>
 
+#include "vertexbuffer.hh"
+
 gl::GLenum check_error_(const char *file, int line) {
   gl::GLenum error_code;
   while ((error_code = gl::glGetError()) != gl::GL_NO_ERROR) {
@@ -56,19 +58,17 @@ Renderer::Renderer() {
   if (!image_data)
     spdlog::error("Failed to load image {}", image);
 
+  m_vbo = std::make_unique<VertexBuffer>(vertices);
+
   gl::glGenVertexArrays(1, &m_VAO);
-  gl::glGenBuffers(1, &m_VBO);
   gl::glGenBuffers(1, &m_EBO);
   gl::glGenTextures(1, &m_TBO);
 
   gl::glBindVertexArray(m_VAO);
 
-  gl::glBindBuffer(gl::GL_ARRAY_BUFFER, m_VBO);
-  gl::glBufferData(gl::GL_ARRAY_BUFFER, vertices.size() * sizeof(float), &vertices.front(),
-                   gl::GL_STATIC_DRAW);
-
   gl::glBindBuffer(gl::GL_ELEMENT_ARRAY_BUFFER, m_EBO);
-  gl::glBufferData(gl::GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), &indices.front(),
+  gl::glBufferData(gl::GL_ELEMENT_ARRAY_BUFFER,
+                   indices.size() * sizeof(unsigned int), &indices.front(),
                    gl::GL_STATIC_DRAW);
 
   gl::glBindTexture(gl::GL_TEXTURE_2D, m_TBO);
@@ -94,7 +94,6 @@ Renderer::Renderer() {
 
 Renderer::~Renderer() {
   gl::glDeleteVertexArrays(1, &m_VAO);
-  gl::glDeleteBuffers(1, &m_VBO);
   gl::glDeleteBuffers(1, &m_EBO);
   gl::glDeleteTextures(1, &m_TBO);
 }

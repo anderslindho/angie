@@ -2,10 +2,15 @@
 
 #include <glbinding/gl/gl.h>
 
+class VertexBuffer;
+
 class Renderer {
 private:
   // const unsigned int m_id;
-  unsigned int m_VBO, m_VAO, m_TBO, m_EBO; // temporary members
+  // temporary members
+  unsigned int m_VAO, m_TBO, m_EBO;
+  std::unique_ptr<VertexBuffer> m_vbo;
+
 public:
   Renderer();  // temporary ctor
   ~Renderer(); // temporary dtor
