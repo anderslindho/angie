@@ -8,6 +8,7 @@
 #include <stb/stb_image.h>
 
 #include "indexbuffer.hh"
+#include "vertexattributes.hh"
 #include "vertexbuffer.hh"
 
 gl::GLenum check_error_(const char *file, int line) {
@@ -61,37 +62,24 @@ Renderer::Renderer() {
 
   m_vbo = std::make_unique<VertexBuffer>(vertices);
   m_ebo = std::make_unique<IndexBuffer>(indices);
+  m_vao = std::make_unique<VertexAttributes>(8);
 
-  gl::glGenVertexArrays(1, &m_VAO);
   gl::glGenTextures(1, &m_TBO);
 
-  gl::glBindVertexArray(m_VAO);
-
+  m_vao->bind();
   gl::glBindTexture(gl::GL_TEXTURE_2D, m_TBO);
   gl::glTexImage2D(gl::GL_TEXTURE_2D, 0, gl::GL_RGB, image_width, image_height,
                    0, gl::GL_RGB, gl::GL_UNSIGNED_BYTE, image_data);
   gl::glGenerateMipmap(gl::GL_TEXTURE_2D);
 
-  // position attribute
-  gl::glVertexAttribPointer(0, 3, gl::GL_FLOAT, gl::GL_FALSE, 8 * sizeof(float),
-                            (void *)0);
-  gl::glEnableVertexAttribArray(0);
-  // color attribute
-  gl::glVertexAttribPointer(1, 3, gl::GL_FLOAT, gl::GL_FALSE, 8 * sizeof(float),
-                            (void *)(3 * sizeof(float)));
-  gl::glEnableVertexAttribArray(1);
-  // texture attribute
-  gl::glVertexAttribPointer(2, 2, gl::GL_FLOAT, gl::GL_FALSE, 8 * sizeof(float),
-                            (void *)(6 * sizeof(float)));
-  gl::glEnableVertexAttribArray(2);
-
   stbi_image_free(image_data);
+
+  m_vao->add_attribute(0, 3); // position
+  m_vao->add_attribute(1, 3); // colour
+  m_vao->add_attribute(2, 2); // texture
 }
 
-Renderer::~Renderer() {
-  gl::glDeleteVertexArrays(1, &m_VAO);
-  gl::glDeleteTextures(1, &m_TBO);
-}
+Renderer::~Renderer() { gl::glDeleteTextures(1, &m_TBO); }
 
 void Renderer::prepare() const {
   gl::glClearColor(0.1f, 0.1f, 0.2f, 1.0f);
@@ -99,7 +87,7 @@ void Renderer::prepare() const {
 }
 
 void Renderer::render() const {
-  gl::glBindVertexArray(m_VAO);
+  m_vao->bind();
   m_ebo->bind();
   gl::glDrawElements(gl::GL_TRIANGLES, m_ebo->size(), gl::GL_UNSIGNED_INT, 0);
   check_error(); // simplistic usage; basically just wipes the error stack but
