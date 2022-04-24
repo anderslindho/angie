@@ -39,8 +39,8 @@ void Renderer::prepare() const {
   gl::glClear(gl::GL_COLOR_BUFFER_BIT);
 }
 
-void Renderer::render(const VertexAttributes *const vao,
-                      const IndexBuffer *const ebo) const {
+void Renderer::render(const std::unique_ptr<VertexAttributes> &vao,
+                      const std::unique_ptr<IndexBuffer> &ebo) const {
   vao->bind();
   ebo->bind();
   gl::glDrawElements(gl::GL_TRIANGLES, ebo->size(), gl::GL_UNSIGNED_INT, 0);

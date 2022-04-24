@@ -13,6 +13,6 @@ private:
 
 public:
   void prepare() const;
-  void render(const VertexAttributes *const vao,
-              const IndexBuffer *const ebo) const;
+  void render(const std::unique_ptr<VertexAttributes> &vao,
+              const std::unique_ptr<IndexBuffer> &ebo) const;
 };

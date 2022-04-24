@@ -102,7 +102,7 @@ void Application::run() const {
       program.set_mat4("u_projection", projection);
     }
 
-    m_renderer->render(vao.get(), ebo.get());
+    m_renderer->render(vao, ebo);
 
     process_input(m_window);
     glfwSwapBuffers(m_window);
