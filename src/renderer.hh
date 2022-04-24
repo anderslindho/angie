@@ -1,5 +1,6 @@
 #pragma once
 
+#include <GLFW/glfw3.h>
 #include <glbinding/gl/gl.h>
 
 #include "indexbuffer.hh"
@@ -16,3 +17,7 @@ public:
   void render(const std::unique_ptr<VertexAttributes> &vao,
               const std::unique_ptr<IndexBuffer> &ebo) const;
 };
+
+void framebuffer_size_callback(GLFWwindow * /* window */, int width,
+                               int height);
+void process_input(GLFWwindow *window);

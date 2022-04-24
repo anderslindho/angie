@@ -11,10 +11,10 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include <spdlog/spdlog.h>
 
 #include "renderer.hh"
 #include "shader.hh"
-#include "utils.hh"
 
 Application::Application(const unsigned int width, const unsigned int height,
                          const std::string &title) {

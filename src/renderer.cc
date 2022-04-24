@@ -47,3 +47,13 @@ void Renderer::render(const std::unique_ptr<VertexAttributes> &vao,
   check_error(); // simplistic usage; basically just wipes the error stack but
                  // does, however, occasionally catch stuff
 }
+
+void framebuffer_size_callback(GLFWwindow * /* window */, int width,
+                               int height) {
+  gl::glViewport(0, 0, width, height);
+}
+
+void process_input(GLFWwindow *window) {
+  if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+    glfwSetWindowShouldClose(window, true);
+}
