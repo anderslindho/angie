@@ -4,7 +4,7 @@
 
 class VertexAttributes {
 private:
-  unsigned int id;
+  unsigned int m_id;
   unsigned int m_stride;
   std::size_t m_nbr_of_attrs{0};
 

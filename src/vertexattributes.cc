@@ -3,12 +3,12 @@
 #include <glbinding/gl/gl.h>
 
 VertexAttributes::VertexAttributes(unsigned int stride) : m_stride(stride) {
-  gl::glGenVertexArrays(1, &id);
+  gl::glGenVertexArrays(1, &m_id);
 }
 
-VertexAttributes::~VertexAttributes() { gl::glDeleteVertexArrays(1, &id); }
+VertexAttributes::~VertexAttributes() { gl::glDeleteVertexArrays(1, &m_id); }
 
-void VertexAttributes::bind() const { gl::glBindVertexArray(id); }
+void VertexAttributes::bind() const { gl::glBindVertexArray(m_id); }
 
 void VertexAttributes::add_attribute(unsigned int index, unsigned int size) {
   bind();

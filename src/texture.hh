@@ -4,7 +4,7 @@
 
 class Texture {
 private:
-  unsigned int id;
+  unsigned int m_id;
 
 public:
   Texture(const std::string &image);

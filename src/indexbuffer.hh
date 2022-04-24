@@ -4,8 +4,8 @@
 
 class IndexBuffer {
 private:
-  unsigned int id;
-  unsigned int index_count;
+  unsigned int m_id;
+  unsigned int m_index_count;
 
 public:
   IndexBuffer(const std::vector<unsigned int> &indices);

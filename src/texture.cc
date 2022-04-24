@@ -14,8 +14,8 @@ Texture::Texture(const std::string &image) {
   if (!image_data)
     spdlog::error("Failed to load image {}", image);
 
-  gl::glGenTextures(1, &id);
-  gl::glBindTexture(gl::GL_TEXTURE_2D, id);
+  gl::glGenTextures(1, &m_id);
+  gl::glBindTexture(gl::GL_TEXTURE_2D, m_id);
   gl::glTexImage2D(gl::GL_TEXTURE_2D, 0, gl::GL_RGB, image_width, image_height,
                    0, gl::GL_RGB, gl::GL_UNSIGNED_BYTE, image_data);
   gl::glGenerateMipmap(gl::GL_TEXTURE_2D);
@@ -23,4 +23,4 @@ Texture::Texture(const std::string &image) {
   stbi_image_free(image_data);
 }
 
-Texture::~Texture() { gl::glDeleteTextures(1, &id); }
+Texture::~Texture() { gl::glDeleteTextures(1, &m_id); }

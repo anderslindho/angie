@@ -58,6 +58,25 @@ Application::Application(const unsigned int width, const unsigned int height,
 
 void Application::run() const {
   Shader program("res/shaders/basic.vert", "res/shaders/basic.frag");
+  std::vector<float> vertices = {
+      // positions        // colors         // texture coords
+      0.5f,  0.5f,  0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, // top right
+      0.5f,  -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, // bottom right
+      -0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, // bottom left
+      -0.5f, 0.5f,  0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f  // top left
+  };
+  std::vector<unsigned int> indices = {
+      0, 1, 3, // first triangle
+      1, 2, 3  // second triangle
+  };
+  std::string image = "res/textures/container.jpg";
+  auto vbo = std::make_unique<VertexBuffer>(vertices);
+  auto ebo = std::make_unique<IndexBuffer>(indices);
+  auto vao = std::make_unique<VertexAttributes>(8);
+  vao->add_attribute(0, 3); // position
+  vao->add_attribute(1, 3); // colour
+  vao->add_attribute(2, 2); // texture
+  auto texture = std::make_unique<Texture>(image);
 
   while (!glfwWindowShouldClose(m_window)) {
     m_renderer->prepare();
@@ -83,7 +102,7 @@ void Application::run() const {
       program.set_mat4("u_projection", projection);
     }
 
-    m_renderer->render();
+    m_renderer->render(vao.get(), ebo.get());
 
     process_input(m_window);
     glfwSwapBuffers(m_window);

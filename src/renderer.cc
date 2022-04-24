@@ -34,37 +34,16 @@ gl::GLenum check_error_(const char *file, int line) {
 }
 #define check_error() check_error_(__FILE__, __LINE__)
 
-Renderer::Renderer() {
-  std::vector<float> vertices = {
-      // positions        // colors         // texture coords
-      0.5f,  0.5f,  0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, // top right
-      0.5f,  -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, // bottom right
-      -0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, // bottom left
-      -0.5f, 0.5f,  0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f  // top left
-  };
-  std::vector<unsigned int> indices = {
-      0, 1, 3, // first triangle
-      1, 2, 3  // second triangle
-  };
-  std::string image = "res/textures/container.jpg";
-  m_vbo = std::make_unique<VertexBuffer>(vertices);
-  m_ebo = std::make_unique<IndexBuffer>(indices);
-  m_vao = std::make_unique<VertexAttributes>(8);
-  m_vao->add_attribute(0, 3); // position
-  m_vao->add_attribute(1, 3); // colour
-  m_vao->add_attribute(2, 2); // texture
-  m_texture = std::make_unique<Texture>(image);
-}
-
 void Renderer::prepare() const {
   gl::glClearColor(0.1f, 0.1f, 0.2f, 1.0f);
   gl::glClear(gl::GL_COLOR_BUFFER_BIT);
 }
 
-void Renderer::render() const {
-  m_vao->bind();
-  m_ebo->bind();
-  gl::glDrawElements(gl::GL_TRIANGLES, m_ebo->size(), gl::GL_UNSIGNED_INT, 0);
+void Renderer::render(const VertexAttributes *const vao,
+                      const IndexBuffer *const ebo) const {
+  vao->bind();
+  ebo->bind();
+  gl::glDrawElements(gl::GL_TRIANGLES, ebo->size(), gl::GL_UNSIGNED_INT, 0);
   check_error(); // simplistic usage; basically just wipes the error stack but
                  // does, however, occasionally catch stuff
 }

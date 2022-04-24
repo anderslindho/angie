@@ -10,15 +10,9 @@
 class Renderer {
 private:
   // const unsigned int m_id;
-  // temporary members
-  std::unique_ptr<Texture> m_texture;
-  std::unique_ptr<VertexBuffer> m_vbo;
-  std::unique_ptr<VertexAttributes> m_vao;
-  std::unique_ptr<IndexBuffer> m_ebo;
 
 public:
-  Renderer(); // temporary ctor
-
   void prepare() const;
-  void render() const;
+  void render(const VertexAttributes *const vao,
+              const IndexBuffer *const ebo) const;
 };
