@@ -15,7 +15,8 @@ private:
   std::chrono::time_point<std::chrono::system_clock> m_start_time;
 
 public:
-  Application(const unsigned int width, const unsigned int height);
+  Application(const unsigned int width, const unsigned int height,
+              const std::string &title);
   Application(const Application &) = delete;
   Application &operator=(const Application &) = delete;
   Application(Application &&) = delete;

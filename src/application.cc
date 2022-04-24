@@ -16,8 +16,9 @@
 #include "shader.hh"
 #include "utils.hh"
 
-Application::Application(const unsigned int width, const unsigned int height) {
-  m_window = [](const int w, const int h) {
+Application::Application(const unsigned int width, const unsigned int height,
+                         const std::string &title) {
+  m_window = [](const int w, const int h, const std::string &t) {
     glfwInit();
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
@@ -26,7 +27,7 @@ Application::Application(const unsigned int width, const unsigned int height) {
 #ifdef __APPLE__
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, true);
 #endif
-    auto window = glfwCreateWindow(w, h, "angie", nullptr, nullptr);
+    auto window = glfwCreateWindow(w, h, t.c_str(), nullptr, nullptr);
     if (!window) {
       glfwTerminate();
       throw std::runtime_error("Failed to init window");
@@ -49,7 +50,7 @@ Application::Application(const unsigned int width, const unsigned int height) {
     spdlog::info("OpenGL {}", gl_version);
 
     return window;
-  }(width, height);
+  }(width, height, title);
   m_renderer = std::make_unique<Renderer>();
   // m_camera = std::make_unique<Camera>();
   m_start_time = std::chrono::system_clock::now();
