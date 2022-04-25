@@ -13,4 +13,6 @@ public:
   VertexBuffer &operator=(const VertexBuffer &) = delete;
 
   void bind() const;
+
+  void release() const;
 };

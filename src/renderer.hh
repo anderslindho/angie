@@ -5,8 +5,7 @@
 
 #include "indexbuffer.hh"
 #include "texture.hh"
-#include "vertexattributes.hh"
-#include "vertexbuffer.hh"
+#include "vertexarray.hh"
 
 class Renderer {
 private:
@@ -14,8 +13,8 @@ private:
 
 public:
   void prepare() const;
-  void render(const std::unique_ptr<VertexAttributes> &vao,
-              const std::unique_ptr<IndexBuffer> &ebo) const;
+  void render(const std::unique_ptr<VertexArray> &vao,
+              const std::unique_ptr<IndexBuffer> &ib) const;
 };
 
 void framebuffer_size_callback(GLFWwindow * /* window */, int width,

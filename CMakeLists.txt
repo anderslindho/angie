@@ -20,7 +20,7 @@ set(SRCS
   ${SRC_DIR}/application.cc
   ${SRC_DIR}/renderer.cc
   ${SRC_DIR}/vertexbuffer.cc
-  ${SRC_DIR}/vertexattributes.cc
+  ${SRC_DIR}/vertexarray.cc
   ${SRC_DIR}/indexbuffer.cc
   ${SRC_DIR}/shader.cc
   ${SRC_DIR}/texture.cc

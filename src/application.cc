@@ -76,12 +76,13 @@ void Application::run() const {
   // the order matters here;
   // need to make sure that vao is bound to both
   // vbo and tbo
-  auto vbo = std::make_unique<VertexBuffer>(vertices);
-  auto ebo = std::make_unique<IndexBuffer>(indices);
-  auto vao = std::make_unique<VertexAttributes>(8);
+  auto vao = std::make_unique<VertexArray>(8);
+  vao->bind();
+  vao->add_buffer(vertices);
   vao->add_attribute(0, 3); // position
   vao->add_attribute(1, 3); // colour
   vao->add_attribute(2, 2); // texture
+  auto ib = std::make_unique<IndexBuffer>(indices);
   auto texture = std::make_unique<Texture>(image);
 
   while (!glfwWindowShouldClose(m_window)) {
@@ -108,7 +109,7 @@ void Application::run() const {
       program.set_mat4("u_projection", projection);
     }
 
-    m_renderer->render(vao, ebo);
+    m_renderer->render(vao, ib);
     process_input(m_window);
 
     glfwSwapBuffers(m_window);
