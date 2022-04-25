@@ -13,6 +13,7 @@ private:
   unsigned int m_id;
   std::unordered_map<std::string, int> m_cache;
   const std::string m_vertex_src, m_fragment_src;
+  const std::string m_shader_dir{"res/shaders/"};
 
 public:
   Shader(const std::string &vertex, const std::string &fragment);

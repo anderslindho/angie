@@ -60,22 +60,31 @@ Application::Application(const unsigned int width, const unsigned int height,
 
 void Application::run() const {
   // TODO: move out
-  std::vector<float> vertices = {
-      // positions        // colors         // texture coords
-      0.5f,  0.5f,  0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, // top right
-      0.5f,  -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, // bottom right
-      -0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, // bottom left
-      -0.5f, 0.5f,  0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f  // top left
+  struct Model {
+    std::vector<float> vertices;
+    std::vector<unsigned int> indices;
+    std::string texture;
   };
-  std::vector<unsigned int> indices = {
-      0, 1, 3, // first triangle
-      1, 2, 3  // second triangle
+  struct Model square {
+    {
+        // positions        // colors         // texture coords
+        0.5f,  0.5f,  0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, // top right
+        0.5f,  -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, // bottom right
+        -0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, // bottom left
+        -0.5f, 0.5f,  0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f  // top left
+    },
+        {
+            0, 1, 3, // first triangle
+            1, 2, 3  // second triangle
+        },
+    {
+      "container.jpg"
+    }
   };
-  Shader program("res/shaders/basic.vert", "res/shaders/basic.frag");
-  std::string image = "res/textures/container.jpg";
+  Shader program("basic.vert", "basic.frag");
 
-  auto mesh = std::make_unique<Mesh>(vertices, indices);
-  mesh->add_texture(image);
+  auto mesh = std::make_unique<Mesh>(square.vertices, square.indices);
+  mesh->add_texture(square.texture);
 
   while (!glfwWindowShouldClose(m_window)) {
     m_renderer->prepare();

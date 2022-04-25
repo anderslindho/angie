@@ -10,8 +10,11 @@ Shader::Shader(const std::string &vertex, const std::string &fragment)
   int success;
   char info_log[512];
 
-  const auto vertex_shader = compile_shader(gl::GL_VERTEX_SHADER, vertex);
-  const auto fragment_shader = compile_shader(gl::GL_FRAGMENT_SHADER, fragment);
+  std::string vertex_path{m_shader_dir + vertex};
+  std::string fragment_path{m_shader_dir + fragment};
+  const auto vertex_shader = compile_shader(gl::GL_VERTEX_SHADER, vertex_path);
+  const auto fragment_shader =
+      compile_shader(gl::GL_FRAGMENT_SHADER, fragment_path);
   m_id = gl::glCreateProgram();
   gl::glAttachShader(m_id, vertex_shader);
   gl::glAttachShader(m_id, fragment_shader);

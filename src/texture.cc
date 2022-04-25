@@ -7,8 +7,9 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb/stb_image.h>
 
-Texture::Texture(const std::string &path)
-    : m_path(path), m_width(0), m_height(0), m_channel_count(0) {
+Texture::Texture(const std::string &fname)
+    : m_fname(fname), m_width(0), m_height(0), m_channel_count(0) {
+  std::string path{m_texture_dir + fname};
   auto buf = stbi_load(path.c_str(), &m_width, &m_height, &m_channel_count, 0);
   if (!buf)
     spdlog::error("Failed to load image {}", path);
