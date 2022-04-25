@@ -19,6 +19,7 @@ set(SRCS
   ${SRC_DIR}/main.cc
   ${SRC_DIR}/application.cc
   ${SRC_DIR}/renderer.cc
+  ${SRC_DIR}/mesh.cc
   ${SRC_DIR}/vertexbuffer.cc
   ${SRC_DIR}/vertexarray.cc
   ${SRC_DIR}/indexbuffer.cc

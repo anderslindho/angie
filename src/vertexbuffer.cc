@@ -9,11 +9,11 @@ VertexBuffer::VertexBuffer(const std::vector<float> &vertices) {
                    &vertices.front(), gl::GL_STATIC_DRAW);
 }
 
-VertexBuffer::~VertexBuffer() { release(); }
+VertexBuffer::~VertexBuffer() { destroy(); }
 
 void VertexBuffer::bind() const { gl::glBindBuffer(gl::GL_ARRAY_BUFFER, m_id); }
 
-void VertexBuffer::release() const {
+void VertexBuffer::destroy() const {
   if (m_id)
     gl::glDeleteBuffers(1, &m_id);
 }

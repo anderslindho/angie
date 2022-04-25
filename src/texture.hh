@@ -15,4 +15,5 @@ public:
   Texture &operator=(const Texture &) = delete;
 
   void bind() const;
+  void destroy();
 };

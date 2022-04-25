@@ -73,17 +73,9 @@ void Application::run() const {
   };
   Shader program("res/shaders/basic.vert", "res/shaders/basic.frag");
   std::string image = "res/textures/container.jpg";
-  // the order matters here;
-  // need to make sure that vao is bound to both
-  // vbo and tbo
-  auto vao = std::make_unique<VertexArray>(8);
-  vao->bind();
-  vao->add_buffer(vertices);
-  vao->add_attribute(0, 3); // position
-  vao->add_attribute(1, 3); // colour
-  vao->add_attribute(2, 2); // texture
-  auto ib = std::make_unique<IndexBuffer>(indices);
-  auto texture = std::make_unique<Texture>(image);
+
+  auto mesh = std::make_unique<Mesh>(vertices, indices);
+  mesh->add_texture(image);
 
   while (!glfwWindowShouldClose(m_window)) {
     m_renderer->prepare();
@@ -109,7 +101,7 @@ void Application::run() const {
       program.set_mat4("u_projection", projection);
     }
 
-    m_renderer->render(vao, ib);
+    m_renderer->render(mesh, program);
     process_input(m_window);
 
     glfwSwapBuffers(m_window);

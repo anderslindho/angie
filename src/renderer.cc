@@ -39,11 +39,9 @@ void Renderer::prepare() const {
   gl::glClear(gl::GL_COLOR_BUFFER_BIT);
 }
 
-void Renderer::render(const std::unique_ptr<VertexArray> &vao,
-                      const std::unique_ptr<IndexBuffer> &ib) const {
-  vao->bind();
-  ib->bind();
-  gl::glDrawElements(gl::GL_TRIANGLES, ib->size(), gl::GL_UNSIGNED_INT, 0);
+void Renderer::render(const std::unique_ptr<Mesh> &mesh,
+                      const Shader &shader) const {
+  mesh->draw(shader);
   check_error(); // simplistic usage; basically just wipes the error stack but
                  // does, however, occasionally catch stuff
                  // TODO: wrap all GL calls

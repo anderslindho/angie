@@ -14,5 +14,6 @@ public:
   IndexBuffer &operator=(const IndexBuffer &) = delete;
 
   void bind() const;
+  void destroy();
   unsigned int size() const;
 };

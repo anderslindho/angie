@@ -21,6 +21,11 @@ Texture::Texture(const std::string &path)
   stbi_image_free(buf);
 }
 
-Texture::~Texture() { gl::glDeleteTextures(1, &m_id); }
+Texture::~Texture() { destroy(); }
 
 void Texture::bind() const { gl::glBindTexture(gl::GL_TEXTURE_2D, m_id); }
+
+void Texture::destroy() {
+  if (m_id)
+    gl::glDeleteTextures(1, &m_id);
+}
