@@ -17,6 +17,7 @@ set(EXTERN_DIR extern)
 
 set(SRCS
   ${SRC_DIR}/main.cc
+  ${SRC_DIR}/camera.cc
   ${SRC_DIR}/application.cc
   ${SRC_DIR}/renderer.cc
   ${SRC_DIR}/mesh.cc

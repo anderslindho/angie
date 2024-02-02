@@ -10,16 +10,16 @@ private:
   glm::vec3 m_direction{0.f, 0.f, -1.f};
   glm::vec3 m_up{0.f, 1.f, 0.f};
 
-  float speed{1.f};
-  float sensitivity{1.f};
+  float speed{.1f};
+  // float sensitivity{1.f};
 
 public:
   Camera(glm::vec3 position) : m_position(position) {}
   Camera(float x, float y, float z) : m_position(glm::vec3(x, y, z)) {}
 
-  glm::vec4 get_view_matrix() const;
+  glm::mat4 get_view_matrix() const;
+  void move(Direction direction);
 
 private:
   // bool first_mouse{true};
-  // void update();
 };

@@ -67,8 +67,14 @@ public:
   }
   bool should_stay_open() const { return !glfwWindowShouldClose(m_window); }
 
-  void process_input() {
+  void process_input(Camera &camera) {
     const auto window_ptr = get_window_ptr();
+
+    if (glfwGetKey(window_ptr, GLFW_KEY_W) == GLFW_PRESS)
+      camera.move(Direction::k_forward);
+    if (glfwGetKey(window_ptr, GLFW_KEY_S) == GLFW_PRESS)
+      camera.move(Direction::k_backward);
+
     if (glfwGetKey(window_ptr, GLFW_KEY_ESCAPE) == GLFW_PRESS)
       glfwSetWindowShouldClose(window_ptr, true);
   }

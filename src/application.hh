@@ -6,16 +6,16 @@
 
 #include <GLFW/glfw3.h>
 
-class Window;
+class Camera;
 class Renderer;
+class Window;
 
 struct Application {
 private:
   std::unique_ptr<Window> m_window;
-  // std::unique_ptr<Camera> m_camera;
+  std::unique_ptr<Camera> m_camera;
   std::unique_ptr<Renderer> m_renderer;
 
-  // unsigned int m_width, m_height;
   std::string m_title;
   std::chrono::time_point<std::chrono::system_clock> m_start_time;
 
