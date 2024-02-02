@@ -22,4 +22,4 @@ public:
 private:
   // bool first_mouse{true};
   // void update();
-}
+};
