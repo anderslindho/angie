@@ -46,14 +46,3 @@ void Renderer::render(const std::unique_ptr<Mesh> &mesh,
                  // does, however, occasionally catch stuff
                  // TODO: wrap all GL calls
 }
-
-void framebuffer_size_callback(GLFWwindow * /* window */, int width,
-                               int height) {
-  spdlog::info("width: {}, height: {}", width, height);
-  gl::glViewport(0, 0, width, height);
-}
-
-void process_input(GLFWwindow *window) {
-  if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
-    glfwSetWindowShouldClose(window, true);
-}

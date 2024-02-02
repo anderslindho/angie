@@ -8,6 +8,7 @@
 
 void framebuffer_size_callback(GLFWwindow * /* window */, int width,
                                int height) {
+  spdlog::info("width: {}, height: {}", width, height);
   gl::glViewport(0, 0, width, height);
 }
 

@@ -14,7 +14,3 @@ public:
   void prepare() const;
   void render(const std::unique_ptr<Mesh> &mesh, const Shader &shader) const;
 };
-
-void framebuffer_size_callback(GLFWwindow * /* window */, int width,
-                               int height);
-void process_input(GLFWwindow *window);

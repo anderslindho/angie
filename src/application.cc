@@ -14,45 +14,13 @@
 
 #include "renderer.hh"
 #include "shader.hh"
+#include "window.hh"
 
 Application::Application(const unsigned int width, const unsigned int height,
                          const std::string &title)
-    : // m_width(width), m_height(height),
-      m_title(title) {
+    : m_title(title) {
 
-  m_window = [](const int w, const int h, const std::string &t) {
-    glfwInit();
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-    glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, true);
-#ifdef __APPLE__
-    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, true);
-#endif
-    auto window = glfwCreateWindow(w, h, t.c_str(), nullptr, nullptr);
-    if (!window) {
-      glfwTerminate();
-      throw std::runtime_error("Failed to init window");
-    }
-    spdlog::info("GLFW {}", glfwGetVersionString());
-    glfwMakeContextCurrent(window);
-
-    /* necessary to redefine the (global) callbacks
-       retrieve with
-       reinterpret_cast<Window*>(glfwGetWindowUserPointer(window)); see
-       https://stackoverflow.com/questions/27387040/referencing-glfws-callback-functions-from-a-class
-     */
-    // glfwSetWindowUserPointer(window, reinterpret_cast<void*>(this));
-
-    glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
-
-    glbinding::initialize(glfwGetProcAddress);
-    auto gl_version = std::string(
-        reinterpret_cast<const char *>(gl::glGetString(gl::GL_VERSION)));
-    spdlog::info("OpenGL {}", gl_version);
-
-    return window;
-  }(width, height, title);
+  m_window = std::make_unique<Window>(width, height);
   m_renderer = std::make_unique<Renderer>();
   // m_camera = std::make_unique<Camera>();
   m_start_time = std::chrono::system_clock::now();
@@ -86,7 +54,7 @@ void Application::run() const {
   auto mesh = std::make_unique<Mesh>(square.vertices, square.indices);
   mesh->add_texture(square.texture);
 
-  while (!glfwWindowShouldClose(m_window)) {
+  while (m_window->should_stay_open()) {
     m_renderer->prepare();
 
     {
@@ -111,18 +79,12 @@ void Application::run() const {
     }
 
     m_renderer->render(mesh, program);
-    process_input(m_window);
-
-    glfwSwapBuffers(m_window);
-    glfwPollEvents();
+    m_window->process_input();
+    m_window->update();
   }
 }
 
 Application::~Application() {
-  if (m_window)
-    glfwDestroyWindow(m_window);
-  glfwTerminate();
-
   const auto run_time = std::chrono::duration_cast<std::chrono::seconds>(
                             std::chrono::system_clock::now() - m_start_time)
                             .count();

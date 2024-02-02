@@ -6,11 +6,12 @@
 
 #include <GLFW/glfw3.h>
 
+class Window;
 class Renderer;
 
 struct Application {
 private:
-  GLFWwindow *m_window;
+  std::unique_ptr<Window> m_window;
   // std::unique_ptr<Camera> m_camera;
   std::unique_ptr<Renderer> m_renderer;
 
