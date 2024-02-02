@@ -15,8 +15,7 @@ private:
 
 public:
   Camera(glm::vec3 position) : m_position(position) {}
-  Camera(float x, float y, float z)
-      : x(position[0]), y(position[1]), z(position[2]) {} // verify the operator
+  Camera(float x, float y, float z) : m_position(glm::vec3(x, y, z)) {}
 
   glm::vec4 get_view_matrix() const;
 
