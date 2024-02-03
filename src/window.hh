@@ -11,8 +11,6 @@
 void framebuffer_size_callback(GLFWwindow * /* window */, int width,
                                int height);
 
-void mouse_callback(GLFWwindow * /* window */, double x_pos, double y_pos);
-
 class Window {
 private:
   GLFWwindow *m_window;
@@ -29,7 +27,4 @@ public:
 
   bool is_key_pressed(int key) const;
   void get_cursor_position(double &x, double &y) const;
-
-private:
-  GLFWwindow *get_window_ptr() { return m_window; }
 };
