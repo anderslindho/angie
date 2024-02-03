@@ -12,12 +12,12 @@ class Window;
 
 struct Application {
 private:
+  std::string m_title;
+  std::chrono::time_point<std::chrono::system_clock> m_start_time;
+
   std::unique_ptr<Window> m_window;
   std::unique_ptr<Camera> m_camera;
   std::unique_ptr<Renderer> m_renderer;
-
-  std::string m_title;
-  std::chrono::time_point<std::chrono::system_clock> m_start_time;
 
 public:
   Application(const unsigned int width, const unsigned int height,
