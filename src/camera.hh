@@ -16,8 +16,8 @@ private:
 
   float m_yaw{-90.f};
   float m_pitch{0.f};
-  double m_last_mouse_x{0.f};
-  double m_last_mouse_y{0.f};
+  double m_last_mouse_x{800.f / 2};
+  double m_last_mouse_y{640.f / 2};
 
 public:
   Camera(glm::vec3 position) : m_position(position) {}
