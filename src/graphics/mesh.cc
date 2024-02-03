@@ -17,20 +17,23 @@ Mesh::Mesh(const std::vector<float> &positions,
 }
 
 Mesh::~Mesh() {
+  // unbind texture first
+
   m_va->destroy();
   m_vb->destroy();
   m_ib->destroy();
-  m_tb->destroy();
+  // we don't necessarily need to destroy texture when mesh is destroyed
+  // m_tb->destroy();
 }
 
 void Mesh::draw(const Shader &shader) const {
   m_va->bind();
+  // m_tb->bind();
   shader.use();
   gl::glDrawElements(gl::GL_TRIANGLES, m_ib->size(), gl::GL_UNSIGNED_INT, 0);
 }
 
 void Mesh::add_texture(const std::string &path) {
-  m_va->bind();
   m_tb = std::make_unique<Texture>(path);
   m_tb->bind();
 }

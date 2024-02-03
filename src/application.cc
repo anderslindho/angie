@@ -19,7 +19,7 @@
 Application::Application(const unsigned int width, const unsigned int height,
                          const std::string &title)
     : m_title(title), m_start_time(std::chrono::system_clock::now()),
-      m_camera(std::make_unique<Camera>(0.f, 0.f, 0.f)),
+      m_camera(std::make_unique<Camera>(0.f, 1.f, 4.f)),
       m_window(std::make_unique<Window>(width, height)),
       m_renderer(std::make_unique<Renderer>()),
       m_camera_controller(
@@ -68,22 +68,11 @@ void Application::run() const {
 
   auto prev_time = std::chrono::system_clock::now();
 
-  auto mesh = std::make_unique<Mesh>(cube.vertices, cube.indices);
-  mesh->add_texture(cube.texture);
+  auto box = std::make_unique<Mesh>(cube.vertices, cube.indices);
+  auto light = std::make_unique<Mesh>(cube.vertices, cube.indices);
 
-  Shader program("basic.vert", "basic.frag");
-
-  std::vector<glm::vec3> cube_positions = {
-      glm::vec3(0.0f, 0.0f, 0.0f),    glm::vec3(2.0f, 5.0f, -15.0f),
-      glm::vec3(-1.5f, -2.2f, -2.5f), glm::vec3(-3.8f, -2.0f, -12.3f),
-      glm::vec3(2.4f, -0.4f, -3.5f),  glm::vec3(-1.7f, 3.0f, -7.5f),
-      glm::vec3(1.3f, -2.0f, -2.5f),  glm::vec3(1.5f, 2.0f, -2.5f),
-      glm::vec3(1.5f, 0.2f, -1.5f),   glm::vec3(-1.3f, 1.0f, -1.5f)};
-
-  program.use();
-  glm::mat4 projection =
-      glm::perspective(glm::radians(45.0f), 800.0f / 640.0f, 0.1f, 100.0f);
-  program.set_mat4("u_projection", projection);
+  Shader colour_prog("colours.vert", "colours.frag");
+  Shader light_prog("light.vert", "light.frag");
 
   while (m_window->should_stay_open()) {
     auto time = std::chrono::system_clock::now();
@@ -91,16 +80,42 @@ void Application::run() const {
         std::chrono::duration<float>(time - prev_time).count();
 
     m_renderer->prepare();
-    for (auto ele : cube_positions) {
-      program.set_mat4("u_model", glm::translate(glm::mat4{1.f}, ele));
-      m_renderer->render(mesh, program);
+    glm::mat4 projection =
+        glm::perspective(glm::radians(45.0f), 800.0f / 640.0f, 0.1f, 100.0f);
+    auto view = m_camera->get_view_matrix();
+
+    {
+      // box
+      colour_prog.use();
+
+      colour_prog.set_vec3("u_object_colour", 1.f, .5f, .31f);
+      colour_prog.set_vec3("u_light_colour", 1.f, 1.f, 1.f);
+
+      colour_prog.set_mat4("u_projection", projection);
+      colour_prog.set_mat4("u_view", view);
+      auto model = glm::mat4{1.f};
+      colour_prog.set_mat4("u_model", model);
+
+      m_renderer->render(box, colour_prog);
     }
 
-    auto view = m_camera->get_view_matrix();
-    program.set_mat4("u_view", view);
+    {
+      // light
+      light_prog.use();
 
-    m_camera_controller->handle_input(delta_time);
+      light_prog.set_mat4("u_projection", projection);
+      light_prog.set_mat4("u_view", view);
+      auto light_pos = glm::vec3{1.2f, 1.f, -3.f};
+      auto model = glm::mat4(1.f);
+      model = glm::translate(model, light_pos);
+      model = glm::scale(model, glm::vec3(.2f));
+      light_prog.set_mat4("u_model", model);
+
+      m_renderer->render(light, light_prog);
+    }
+
     m_window->update();
+    m_camera_controller->handle_input(delta_time);
 
     prev_time = time;
   }
