@@ -34,6 +34,7 @@ void Application::run() const {
     std::vector<unsigned int> indices;
     std::string texture;
   };
+
   struct Model square {
     {
         // positions        // colors         // texture coords
@@ -50,10 +51,44 @@ void Application::run() const {
       "container.jpg"
     }
   };
-  Shader program("basic.vert", "basic.frag");
 
-  auto mesh = std::make_unique<Mesh>(square.vertices, square.indices);
-  mesh->add_texture(square.texture);
+  // These coordinates and indices are shamelessly stolen
+  struct Model cube {
+    {
+        -0.5f, -0.5f, 0.5f,  1.0f,  0.0f,  0.0f,  0.0f,  0.0f,  0.5f,  -0.5f,
+        0.5f,  0.0f,  1.0f,  0.0f,  1.0f,  0.0f,  0.5f,  0.5f,  0.5f,  0.0f,
+        0.0f,  1.0f,  1.0f,  1.0f,  -0.5f, 0.5f,  0.5f,  1.0f,  1.0f,  0.0f,
+        0.0f,  1.0f,  -0.5f, -0.5f, -0.5f, 0.0f,  1.0f,  1.0f,  0.0f,  0.0f,
+        0.5f,  -0.5f, -0.5f, 1.0f,  0.0f,  1.0f,  1.0f,  0.0f,  0.5f,  0.5f,
+        -0.5f, 1.0f,  1.0f,  0.0f,  1.0f,  1.0f,  -0.5f, 0.5f,  -0.5f, 0.0f,
+        0.0f,  1.0f,  0.0f,  1.0f,  0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
+        0.0f,  0.0f,  -0.5f, 0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  1.0f,  0.0f,
+        -0.5f, 0.5f,  -0.5f, 0.0f,  0.0f,  1.0f,  1.0f,  1.0f,  0.5f,  0.5f,
+        -0.5f, 1.0f,  1.0f,  0.0f,  0.0f,  1.0f,  -0.5f, -0.5f, -0.5f, 1.0f,
+        0.0f,  0.0f,  0.0f,  0.0f,  0.5f,  -0.5f, -0.5f, 0.0f,  1.0f,  0.0f,
+        1.0f,  0.0f,  0.5f,  -0.5f, 0.5f,  0.0f,  0.0f,  1.0f,  1.0f,  1.0f,
+        -0.5f, -0.5f, 0.5f,  1.0f,  1.0f,  0.0f,  0.0f,  1.0f,  -0.5f, -0.5f,
+        -0.5f, 1.0f,  0.0f,  0.0f,  0.0f,  0.0f,  -0.5f, 0.5f,  -0.5f, 0.0f,
+        1.0f,  0.0f,  1.0f,  0.0f,  -0.5f, 0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
+        1.0f,  1.0f,  -0.5f, -0.5f, 0.5f,  1.0f,  1.0f,  0.0f,  0.0f,  1.0f,
+        0.5f,  -0.5f, 0.5f,  1.0f,  0.0f,  0.0f,  0.0f,  0.0f,  0.5f,  0.5f,
+        0.5f,  0.0f,  1.0f,  0.0f,  1.0f,  0.0f,  0.5f,  0.5f,  -0.5f, 0.0f,
+        0.0f,  1.0f,  1.0f,  1.0f,  0.5f,  -0.5f, -0.5f, 1.0f,  1.0f,  0.0f,
+        0.0f,  1.0f,
+    },
+        {
+            0,  1,  2,  2,  3,  0,  4,  5,  6,  6,  7,  4,
+            8,  9,  10, 10, 11, 8,  12, 13, 14, 14, 15, 12,
+            16, 17, 18, 18, 19, 16, 20, 21, 22, 22, 23, 20,
+        },
+    {
+      "container.jpg"
+    }
+  };
+
+  Shader program("basic.vert", "basic.frag");
+  auto mesh = std::make_unique<Mesh>(cube.vertices, cube.indices);
+  mesh->add_texture(cube.texture);
 
   auto prev_time = std::chrono::system_clock::now();
 

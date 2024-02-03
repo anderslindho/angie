@@ -50,6 +50,8 @@ public:
           reinterpret_cast<const char *>(gl::glGetString(gl::GL_VERSION)));
       spdlog::info("OpenGL {}", gl_version);
 
+      gl::glEnable(gl::GL_DEPTH_TEST);
+
       return window;
     }(width, height);
   }

@@ -36,7 +36,7 @@ gl::GLenum check_error_(const char *file, int line) {
 
 void Renderer::prepare() const {
   gl::glClearColor(0.1f, 0.1f, 0.2f, 1.0f);
-  gl::glClear(gl::GL_COLOR_BUFFER_BIT);
+  gl::glClear(gl::GL_COLOR_BUFFER_BIT | gl::GL_DEPTH_BUFFER_BIT);
 }
 
 void Renderer::render(const std::unique_ptr<Mesh> &mesh,
