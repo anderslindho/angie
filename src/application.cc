@@ -23,7 +23,7 @@ Application::Application(const unsigned int width, const unsigned int height,
 
   m_window = std::make_unique<Window>(width, height);
   m_renderer = std::make_unique<Renderer>();
-  m_camera = std::make_unique<Camera>(0, 0, 1);
+  m_camera = std::make_unique<Camera>(0, 0, -1);
   m_start_time = std::chrono::system_clock::now();
 }
 
@@ -55,14 +55,19 @@ void Application::run() const {
   auto mesh = std::make_unique<Mesh>(square.vertices, square.indices);
   mesh->add_texture(square.texture);
 
+  auto prev_time = std::chrono::system_clock::now();
+
   while (m_window->should_stay_open()) {
     m_renderer->prepare();
+    auto time = std::chrono::system_clock::now();
+    const float delta_time =
+        std::chrono::duration<float>(time - prev_time).count();
 
     {
       program.use();
       const auto run_time =
-          std::chrono::duration_cast<std::chrono::milliseconds>(
-              std::chrono::system_clock::now() - m_start_time)
+          std::chrono::duration_cast<std::chrono::milliseconds>(time -
+                                                                m_start_time)
               .count();
       const auto wave = std::sin(run_time / 1000.f) / 2.5f + 0.6f;
       program.set_vec3("u_modifier", glm::vec3(wave, wave, wave));
@@ -81,8 +86,10 @@ void Application::run() const {
     }
 
     m_renderer->render(mesh, program);
-    m_window->process_input(*m_camera);
+    m_window->process_input(*m_camera, delta_time);
     m_window->update();
+
+    prev_time = time;
   }
 }
 

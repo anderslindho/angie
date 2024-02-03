@@ -8,7 +8,7 @@
 
 void framebuffer_size_callback(GLFWwindow * /* window */, int width,
                                int height) {
-  spdlog::info("width: {}, height: {}", width, height);
+  spdlog::debug("width: {}, height: {}", width, height);
   gl::glViewport(0, 0, width, height);
 }
 
@@ -67,13 +67,17 @@ public:
   }
   bool should_stay_open() const { return !glfwWindowShouldClose(m_window); }
 
-  void process_input(Camera &camera) {
+  void process_input(Camera &camera, float delta_time) {
     const auto window_ptr = get_window_ptr();
 
     if (glfwGetKey(window_ptr, GLFW_KEY_W) == GLFW_PRESS)
-      camera.move(Direction::k_forward);
+      camera.move(Direction::k_forward, delta_time);
     if (glfwGetKey(window_ptr, GLFW_KEY_S) == GLFW_PRESS)
-      camera.move(Direction::k_backward);
+      camera.move(Direction::k_backward, delta_time);
+    if (glfwGetKey(window_ptr, GLFW_KEY_A) == GLFW_PRESS)
+      camera.move(Direction::k_left, delta_time);
+    if (glfwGetKey(window_ptr, GLFW_KEY_D) == GLFW_PRESS)
+      camera.move(Direction::k_right, delta_time);
 
     if (glfwGetKey(window_ptr, GLFW_KEY_ESCAPE) == GLFW_PRESS)
       glfwSetWindowShouldClose(window_ptr, true);
