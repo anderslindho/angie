@@ -1,7 +1,7 @@
-#include "application.hh"
-
 #include <cstdlib>
 #include <string>
+
+#include "application.hh"
 
 const int k_width = 800;
 const int k_height = 640;

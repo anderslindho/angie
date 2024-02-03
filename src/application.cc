@@ -13,8 +13,8 @@
 #include <spdlog/spdlog.h>
 
 #include "camera.hh"
-#include "renderer.hh"
-#include "shader.hh"
+#include "graphics/renderer.hh"
+#include "graphics/shader.hh"
 #include "window.hh"
 
 Application::Application(const unsigned int width, const unsigned int height,

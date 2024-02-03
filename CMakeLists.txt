@@ -17,15 +17,15 @@ set(EXTERN_DIR extern)
 
 set(SRCS
   ${SRC_DIR}/main.cc
-  ${SRC_DIR}/camera.cc
   ${SRC_DIR}/application.cc
-  ${SRC_DIR}/renderer.cc
-  ${SRC_DIR}/mesh.cc
-  ${SRC_DIR}/vertexbuffer.cc
-  ${SRC_DIR}/vertexarray.cc
-  ${SRC_DIR}/indexbuffer.cc
-  ${SRC_DIR}/shader.cc
-  ${SRC_DIR}/texture.cc
+  ${SRC_DIR}/camera.cc
+  ${SRC_DIR}/graphics/renderer.cc
+  ${SRC_DIR}/graphics/mesh.cc
+  ${SRC_DIR}/graphics/vertexbuffer.cc
+  ${SRC_DIR}/graphics/vertexarray.cc
+  ${SRC_DIR}/graphics/indexbuffer.cc
+  ${SRC_DIR}/graphics/shader.cc
+  ${SRC_DIR}/graphics/texture.cc
 )
 
 add_executable(${PROJECT_NAME} ${SRCS})
