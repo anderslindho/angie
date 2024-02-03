@@ -19,13 +19,10 @@
 
 Application::Application(const unsigned int width, const unsigned int height,
                          const std::string &title)
-    : m_title(title) {
-
-  m_window = std::make_unique<Window>(width, height);
-  m_renderer = std::make_unique<Renderer>();
-  m_camera = std::make_unique<Camera>(0.f, 0.f, 3.f);
-  m_start_time = std::chrono::system_clock::now();
-}
+    : m_title(title), m_window(std::make_unique<Window>(width, height)),
+      m_camera(std::make_unique<Camera>(0.f, 0.f, 3.f)),
+      m_renderer(std::make_unique<Renderer>()),
+      m_start_time(std::chrono::system_clock::now()) {}
 
 void Application::run() const {
   // TODO: move out
