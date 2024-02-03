@@ -15,13 +15,20 @@ set(SRC_DIR src)
 set(LIB_DIR libs)
 set(EXTERN_DIR extern)
 
-add_subdirectory(${SRC_DIR})
-add_subdirectory(${SRC_DIR}/graphics)
-
-add_executable(${PROJECT_NAME}
-  src/main.cc
+set(SRCS
+  ${SRC_DIR}/main.cc
+  ${SRC_DIR}/application.cc
+  ${SRC_DIR}/camera.cc
+  ${SRC_DIR}/graphics/renderer.cc
+  ${SRC_DIR}/graphics/mesh.cc
+  ${SRC_DIR}/graphics/vertexbuffer.cc
+  ${SRC_DIR}/graphics/vertexarray.cc
+  ${SRC_DIR}/graphics/indexbuffer.cc
+  ${SRC_DIR}/graphics/shader.cc
+  ${SRC_DIR}/graphics/texture.cc
 )
-target_link_libraries(${PROJECT_NAME} application graphics)
+
+add_executable(${PROJECT_NAME} ${SRCS})
 
 target_compile_definitions(${PROJECT_NAME} PRIVATE GLFW_INCLUDE_NONE)
 if(MSVC)
