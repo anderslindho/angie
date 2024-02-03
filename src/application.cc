@@ -12,16 +12,14 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <spdlog/spdlog.h>
 
-#include "camera.hh"
-#include "graphics/renderer.hh"
 #include "graphics/shader.hh"
 #include "window.hh"
 
 Application::Application(const unsigned int width, const unsigned int height,
                          const std::string &title)
     : m_title(title), m_start_time(std::chrono::system_clock::now()),
-      m_window(std::make_unique<Window>(width, height)),
       m_camera(std::make_unique<Camera>(0.f, 0.f, 3.f)),
+      m_window(std::make_unique<Window>(width, height, *m_camera)),
       m_renderer(std::make_unique<Renderer>()) {}
 
 void Application::run() const {
@@ -118,7 +116,8 @@ void Application::run() const {
     }
 
     m_renderer->render(mesh, program);
-    m_window->process_input(*m_camera, delta_time);
+    m_window->process_keyboard_input(delta_time);
+    m_window->process_mouse_movement(delta_time);
     m_window->update();
 
     prev_time = time;
