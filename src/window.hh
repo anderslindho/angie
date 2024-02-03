@@ -80,6 +80,10 @@ public:
       camera.move(Direction::k_left, delta_time);
     if (glfwGetKey(window_ptr, GLFW_KEY_D) == GLFW_PRESS)
       camera.move(Direction::k_right, delta_time);
+    if (glfwGetKey(window_ptr, GLFW_KEY_SPACE) == GLFW_PRESS)
+      camera.move(Direction::k_up, delta_time);
+    if (glfwGetKey(window_ptr, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS)
+      camera.move(Direction::k_down, delta_time);
 
     if (glfwGetKey(window_ptr, GLFW_KEY_ESCAPE) == GLFW_PRESS)
       glfwSetWindowShouldClose(window_ptr, true);

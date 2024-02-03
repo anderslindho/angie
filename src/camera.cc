@@ -22,5 +22,11 @@ void Camera::move(Direction direction, float delta_time) {
     m_position +=
         glm::normalize(glm::cross(m_direction, m_up)) * speed * delta_time;
     break;
+  case Direction::k_up:
+    m_position += m_up * speed * delta_time;
+    break;
+  case Direction::k_down:
+    m_position -= m_up * speed * delta_time;
+    break;
   }
 }
