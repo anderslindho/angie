@@ -21,8 +21,10 @@ set(SRCS
   ${SRC_DIR}/main.cc
   ${SRC_DIR}/application.cc
   ${SRC_DIR}/window.cc
-  ${SRC_DIR}/cameracontroller.cc
-  ${SRC_DIR}/camera.cc
+
+  ${SRC_DIR}/camera/cameracontroller.cc
+  ${SRC_DIR}/camera/camera.cc
+
   ${SRC_DIR}/graphics/renderer.cc
   ${SRC_DIR}/graphics/mesh.cc
   ${SRC_DIR}/graphics/vertexbuffer.cc

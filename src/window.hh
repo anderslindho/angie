@@ -6,7 +6,7 @@
 #include <glbinding/gl/gl.h>
 #include <glbinding/glbinding.h>
 
-#include "camera.hh"
+#include "camera/camera.hh"
 
 void framebuffer_size_callback(GLFWwindow * /* window */, int width,
                                int height);

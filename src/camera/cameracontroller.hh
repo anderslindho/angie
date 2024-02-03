@@ -1,7 +1,7 @@
 #pragma once
 
+#include "../window.hh"
 #include "camera.hh"
-#include "window.hh"
 
 class CameraController {
 private:
