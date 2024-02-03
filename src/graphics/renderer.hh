@@ -1,6 +1,5 @@
 #pragma once
 
-#include <GLFW/glfw3.h>
 #include <glbinding/gl/gl.h>
 
 #include "mesh.hh"

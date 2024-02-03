@@ -3,7 +3,6 @@
 #include <string>
 #include <unordered_map>
 
-#include <GLFW/glfw3.h>
 #include <glbinding/gl/gl.h>
 
 #include <glm/glm.hpp>
