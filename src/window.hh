@@ -16,18 +16,19 @@ void mouse_callback(GLFWwindow * /* window */, double x_pos, double y_pos);
 class Window {
 private:
   GLFWwindow *m_window;
-  Camera &m_camera;
 
 public:
-  Window(const int width, const int height, Camera &camera);
+  Window(const int width, const int height);
   ~Window();
   Window(const Window &) = delete;
   Window &operator=(const Window &) = delete;
 
   void update() const;
   bool should_stay_open() const { return !glfwWindowShouldClose(m_window); }
-  void process_keyboard_input(float delta_time);
-  void process_mouse_movement(float delta_time);
+  void close() { glfwSetWindowShouldClose(m_window, true); }
+
+  bool is_key_pressed(int key) const;
+  void get_cursor_position(double &x, double &y) const;
 
 private:
   GLFWwindow *get_window_ptr() { return m_window; }

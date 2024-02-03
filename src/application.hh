@@ -8,6 +8,7 @@
 
 class Window;
 class Camera;
+class CameraController;
 
 struct Application {
 private:
@@ -17,6 +18,7 @@ private:
   std::unique_ptr<Camera> m_camera;
   std::unique_ptr<Window> m_window;
   std::unique_ptr<Renderer> m_renderer;
+  std::unique_ptr<CameraController> m_camera_controller;
 
 public:
   Application(const unsigned int width, const unsigned int height,

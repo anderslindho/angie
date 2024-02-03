@@ -12,8 +12,7 @@ void framebuffer_size_callback(GLFWwindow * /* window */, int width,
   gl::glViewport(0, 0, width, height);
 }
 
-Window::Window(const int width, const int height, Camera &camera)
-    : m_camera(camera) {
+Window::Window(const int width, const int height) {
   m_window = [](const int w, const int h) {
     glfwInit();
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
@@ -63,30 +62,10 @@ void Window::update() const {
   glfwPollEvents();
 }
 
-void Window::process_keyboard_input(float delta_time) {
-  const auto window_ptr = get_window_ptr();
-
-  if (glfwGetKey(window_ptr, GLFW_KEY_W) == GLFW_PRESS)
-    m_camera.move(Direction::k_forward, delta_time);
-  if (glfwGetKey(window_ptr, GLFW_KEY_S) == GLFW_PRESS)
-    m_camera.move(Direction::k_backward, delta_time);
-  if (glfwGetKey(window_ptr, GLFW_KEY_A) == GLFW_PRESS)
-    m_camera.move(Direction::k_left, delta_time);
-  if (glfwGetKey(window_ptr, GLFW_KEY_D) == GLFW_PRESS)
-    m_camera.move(Direction::k_right, delta_time);
-  if (glfwGetKey(window_ptr, GLFW_KEY_SPACE) == GLFW_PRESS)
-    m_camera.move(Direction::k_up, delta_time);
-  if (glfwGetKey(window_ptr, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS)
-    m_camera.move(Direction::k_down, delta_time);
-
-  if (glfwGetKey(window_ptr, GLFW_KEY_ESCAPE) == GLFW_PRESS)
-    glfwSetWindowShouldClose(window_ptr, true);
+bool Window::is_key_pressed(int key) const {
+  return glfwGetKey(m_window, key) == GLFW_PRESS;
 }
 
-void Window::process_mouse_movement(float delta_time) {
-  const auto window_ptr = get_window_ptr();
-
-  double x_pos, y_pos;
-  glfwGetCursorPos(window_ptr, &x_pos, &y_pos);
-  m_camera.handle_mouse_movement(x_pos, y_pos, delta_time);
+void Window::get_cursor_position(double &x, double &y) const {
+  glfwGetCursorPos(m_window, &x, &y);
 }

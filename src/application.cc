@@ -12,6 +12,7 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <spdlog/spdlog.h>
 
+#include "cameracontroller.hh"
 #include "graphics/shader.hh"
 #include "window.hh"
 
@@ -19,8 +20,10 @@ Application::Application(const unsigned int width, const unsigned int height,
                          const std::string &title)
     : m_title(title), m_start_time(std::chrono::system_clock::now()),
       m_camera(std::make_unique<Camera>(0.f, 0.f, 3.f)),
-      m_window(std::make_unique<Window>(width, height, *m_camera)),
-      m_renderer(std::make_unique<Renderer>()) {}
+      m_window(std::make_unique<Window>(width, height)),
+      m_renderer(std::make_unique<Renderer>()),
+      m_camera_controller(
+          std::make_unique<CameraController>(*m_camera, *m_window)) {}
 
 void Application::run() const {
   struct Model {
@@ -98,8 +101,7 @@ void Application::run() const {
                                      // than the initially set ones
     program.set_mat4("u_view", view);
 
-    m_window->process_keyboard_input(delta_time);
-    m_window->process_mouse_movement(delta_time);
+    m_camera_controller->handle_input(delta_time);
     m_window->update();
 
     prev_time = time;
