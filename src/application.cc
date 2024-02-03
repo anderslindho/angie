@@ -19,7 +19,7 @@
 Application::Application(const unsigned int width, const unsigned int height,
                          const std::string &title)
     : m_title(title), m_start_time(std::chrono::system_clock::now()),
-      m_camera(std::make_unique<Camera>(0.f, 0.f, 3.f)),
+      m_camera(std::make_unique<Camera>(0.f, 0.f, 0.f)),
       m_window(std::make_unique<Window>(width, height)),
       m_renderer(std::make_unique<Renderer>()),
       m_camera_controller(
@@ -86,19 +86,17 @@ void Application::run() const {
   program.set_mat4("u_projection", projection);
 
   while (m_window->should_stay_open()) {
-    m_renderer->prepare();
     auto time = std::chrono::system_clock::now();
     const float delta_time =
         std::chrono::duration<float>(time - prev_time).count();
 
+    m_renderer->prepare();
     for (auto ele : cube_positions) {
       program.set_mat4("u_model", glm::translate(glm::mat4{1.f}, ele));
       m_renderer->render(mesh, program);
     }
 
-    auto view =
-        m_camera->get_view_matrix(); // something here gives us different values
-                                     // than the initially set ones
+    auto view = m_camera->get_view_matrix();
     program.set_mat4("u_view", view);
 
     m_camera_controller->handle_input(delta_time);

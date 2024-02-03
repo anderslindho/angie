@@ -10,6 +10,7 @@ private:
   glm::vec3 m_direction{0.f, 0.f, -1.f};
   glm::vec3 m_up{0.f, 1.f, 0.f};
   glm::vec3 m_right;
+  glm::vec3 m_world_up{0.f, 1.f, 0.f};
 
   float m_speed{5.f};
   float m_sensitivity{7.f};
@@ -20,7 +21,8 @@ private:
   double m_last_mouse_y{640.f / 2};
 
 public:
-  Camera(glm::vec3 position) : m_position(position) {}
+  Camera(glm::vec3 position = glm::vec3{0.f, 0.f, 0.f})
+      : m_position(position) {}
   Camera(float x, float y, float z) : m_position(glm::vec3(x, y, z)) {}
 
   glm::mat4 get_view_matrix() const;
