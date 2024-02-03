@@ -23,28 +23,10 @@ Application::Application(const unsigned int width, const unsigned int height,
       m_renderer(std::make_unique<Renderer>()) {}
 
 void Application::run() const {
-  // TODO: move out
   struct Model {
     std::vector<float> vertices;
     std::vector<unsigned int> indices;
     std::string texture;
-  };
-
-  struct Model square {
-    {
-        // positions        // colors         // texture coords
-        0.5f,  0.5f,  0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, // top right
-        0.5f,  -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, // bottom right
-        -0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, // bottom left
-        -0.5f, 0.5f,  0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f  // top left
-    },
-        {
-            0, 1, 3, // first triangle
-            1, 2, 3  // second triangle
-        },
-    {
-      "container.jpg"
-    }
   };
 
   // These coordinates and indices are shamelessly stolen
@@ -81,11 +63,24 @@ void Application::run() const {
     }
   };
 
-  Shader program("basic.vert", "basic.frag");
+  auto prev_time = std::chrono::system_clock::now();
+
   auto mesh = std::make_unique<Mesh>(cube.vertices, cube.indices);
   mesh->add_texture(cube.texture);
 
-  auto prev_time = std::chrono::system_clock::now();
+  Shader program("basic.vert", "basic.frag");
+
+  std::vector<glm::vec3> cube_positions = {
+      glm::vec3(0.0f, 0.0f, 0.0f),    glm::vec3(2.0f, 5.0f, -15.0f),
+      glm::vec3(-1.5f, -2.2f, -2.5f), glm::vec3(-3.8f, -2.0f, -12.3f),
+      glm::vec3(2.4f, -0.4f, -3.5f),  glm::vec3(-1.7f, 3.0f, -7.5f),
+      glm::vec3(1.3f, -2.0f, -2.5f),  glm::vec3(1.5f, 2.0f, -2.5f),
+      glm::vec3(1.5f, 0.2f, -1.5f),   glm::vec3(-1.3f, 1.0f, -1.5f)};
+
+  program.use();
+  glm::mat4 projection =
+      glm::perspective(glm::radians(45.0f), 800.0f / 640.0f, 0.1f, 100.0f);
+  program.set_mat4("u_projection", projection);
 
   while (m_window->should_stay_open()) {
     m_renderer->prepare();
@@ -93,29 +88,16 @@ void Application::run() const {
     const float delta_time =
         std::chrono::duration<float>(time - prev_time).count();
 
-    {
-      program.use();
-      const auto run_time =
-          std::chrono::duration_cast<std::chrono::milliseconds>(time -
-                                                                m_start_time)
-              .count();
-      const auto wave = std::sin(run_time / 1000.f) / 2.5f + 0.6f;
-      program.set_vec3("u_modifier", glm::vec3(wave, wave, wave));
-
-      glm::mat4 identity = glm::mat4(1.0f);
-      glm::mat4 model =
-          glm::rotate(identity, glm::radians(-55.0f * run_time / 1000.f),
-                      glm::vec3(1.0f, 0.0f, 0.0f));
-      glm::mat4 projection =
-          glm::perspective(glm::radians(45.0f), 800.0f / 640.0f, 0.1f, 100.0f);
-      program.set_mat4("u_model", model);
-      program.set_mat4("u_projection", projection);
-
-      auto view = m_camera->get_view_matrix();
-      program.set_mat4("u_view", view);
+    for (auto ele : cube_positions) {
+      program.set_mat4("u_model", glm::translate(glm::mat4{1.f}, ele));
+      m_renderer->render(mesh, program);
     }
 
-    m_renderer->render(mesh, program);
+    auto view =
+        m_camera->get_view_matrix(); // something here gives us different values
+                                     // than the initially set ones
+    program.set_mat4("u_view", view);
+
     m_window->process_keyboard_input(delta_time);
     m_window->process_mouse_movement(delta_time);
     m_window->update();

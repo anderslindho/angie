@@ -11,8 +11,8 @@ private:
   glm::vec3 m_up{0.f, 1.f, 0.f};
   glm::vec3 m_right;
 
-  float m_speed{3.f};
-  float m_sensitivity{3.f};
+  float m_speed{5.f};
+  float m_sensitivity{7.f};
 
   float m_yaw{-90.f};
   float m_pitch{0.f};

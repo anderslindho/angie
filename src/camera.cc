@@ -60,6 +60,6 @@ void Camera::update_view_matrix() {
   new_direction.z = sin(glm::radians(m_yaw)) * cos(glm::radians(m_pitch));
   m_direction = glm::normalize(new_direction);
 
-  m_right = glm::normalize(glm::cross(m_up, m_direction));
-  m_up = glm::normalize(glm::cross(m_direction, m_right));
+  m_right = glm::normalize(glm::cross(m_direction, m_up));
+  m_up = glm::normalize(glm::cross(m_right, m_direction));
 }
