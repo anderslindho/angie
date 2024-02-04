@@ -34,6 +34,12 @@ void Camera::move(Direction direction, float delta_time) {
 
 void Camera::handle_mouse_movement(double x_pos, double y_pos,
                                    float delta_time) {
+  if (first_mouse) {
+    m_last_mouse_x = x_pos;
+    m_last_mouse_y = y_pos;
+    first_mouse = false;
+  }
+
   spdlog::debug("x: {}, y: {}", x_pos, y_pos);
   double delta_x = x_pos - m_last_mouse_x;
   double delta_y = y_pos - m_last_mouse_y;

@@ -19,7 +19,7 @@
 Application::Application(const unsigned int width, const unsigned int height,
                          const std::string &title)
     : m_title(title), m_start_time(std::chrono::system_clock::now()),
-      m_camera(std::make_unique<Camera>(0.f, 1.f, 4.f)),
+      m_camera(std::make_unique<Camera>(.5f, 1.f, 5.f)),
       m_window(std::make_unique<Window>(width, height)),
       m_renderer(std::make_unique<Renderer>()),
       m_camera_controller(
@@ -81,10 +81,12 @@ void Application::run() const {
   auto prev_time = std::chrono::system_clock::now();
 
   auto box = std::make_unique<Mesh>(cube.vertices, cube.indices);
-  auto light = std::make_unique<Mesh>(cube.vertices, cube.indices);
-  auto light_pos = glm::vec3{1.2f, 1.f, -3.f};
-
+  auto box_pos = glm::vec3{0.f, 0.f, 0.f};
   Shader colour_prog("colours.vert", "colours.frag");
+
+  auto light = std::make_unique<Mesh>(cube.vertices, cube.indices);
+  auto circling_radius = 2.f;
+  float angular_velocity = .001f;
   Shader light_prog("light.vert", "light.frag");
 
   while (m_window->should_stay_open()) {
@@ -97,6 +99,15 @@ void Application::run() const {
         glm::perspective(glm::radians(45.0f), 800.0f / 640.0f, 0.1f, 100.0f);
     auto view = m_camera->get_view_matrix();
 
+    const auto run_time = std::chrono::duration_cast<std::chrono::milliseconds>(
+                              std::chrono::system_clock::now() - m_start_time)
+                              .count();
+    float angle = angular_velocity * run_time;
+    float x = box_pos.x + circling_radius * cos(angle);
+    float y = box_pos.y + .7f;
+    float z = box_pos.z + circling_radius * sin(angle);
+    glm::vec3 light_pos(x, y, z);
+
     {
       // box
       colour_prog.use();
@@ -108,6 +119,7 @@ void Application::run() const {
       colour_prog.set_mat4("u_projection", projection);
       colour_prog.set_mat4("u_view", view);
       auto model = glm::mat4{1.f};
+      model = glm::translate(model, box_pos);
       colour_prog.set_mat4("u_model", model);
 
       m_renderer->render(box, colour_prog);
