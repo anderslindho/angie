@@ -42,7 +42,6 @@ void Renderer::prepare() const {
 void Renderer::render(const std::unique_ptr<Mesh> &mesh,
                       const Shader &shader) const {
   mesh->draw(shader);
-  check_error(); // simplistic usage; basically just wipes the error stack but
+  check_error(); // basically just wipes the error stack but
                  // does, however, occasionally catch stuff
-                 // TODO: wrap all GL calls
 }
