@@ -9,7 +9,7 @@ glm::mat4 Camera::get_view_matrix() const {
 }
 
 void Camera::move(Direction direction, float delta_time) {
-  auto magnitude = m_speed * delta_time;
+  auto magnitude = m_movement_speed * delta_time;
   switch (direction) {
   case Direction::k_forward:
     m_position += m_direction * magnitude;
@@ -38,8 +38,8 @@ void Camera::handle_mouse_movement(double x_pos, double y_pos,
   double delta_x = x_pos - m_last_mouse_x;
   double delta_y = y_pos - m_last_mouse_y;
 
-  m_yaw += static_cast<float>(delta_x) * m_sensitivity * delta_time;
-  m_pitch -= static_cast<float>(delta_y) * m_sensitivity * delta_time;
+  m_yaw += static_cast<float>(delta_x) * m_mouse_sensitivity * delta_time;
+  m_pitch -= static_cast<float>(delta_y) * m_mouse_sensitivity * delta_time;
 
   if (m_pitch > 89.0f)
     m_pitch = 89.0f;

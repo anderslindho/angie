@@ -12,8 +12,8 @@ private:
   glm::vec3 m_right;
   glm::vec3 m_world_up{0.f, 1.f, 0.f};
 
-  float m_speed{5.f};
-  float m_sensitivity{9.f};
+  float m_movement_speed{5.f};
+  float m_mouse_sensitivity{9.f};
 
   float m_yaw{-90.f};
   float m_pitch{0.f};
