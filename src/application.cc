@@ -34,28 +34,40 @@ void Application::run() const {
 
   // These coordinates and indices are shamelessly stolen
   struct Model cube {
-    {
-        -0.5f, -0.5f, 0.5f,  1.0f,  0.0f,  0.0f,  0.0f,  0.0f,  0.5f,  -0.5f,
-        0.5f,  0.0f,  1.0f,  0.0f,  1.0f,  0.0f,  0.5f,  0.5f,  0.5f,  0.0f,
-        0.0f,  1.0f,  1.0f,  1.0f,  -0.5f, 0.5f,  0.5f,  1.0f,  1.0f,  0.0f,
-        0.0f,  1.0f,  -0.5f, -0.5f, -0.5f, 0.0f,  1.0f,  1.0f,  0.0f,  0.0f,
-        0.5f,  -0.5f, -0.5f, 1.0f,  0.0f,  1.0f,  1.0f,  0.0f,  0.5f,  0.5f,
-        -0.5f, 1.0f,  1.0f,  0.0f,  1.0f,  1.0f,  -0.5f, 0.5f,  -0.5f, 0.0f,
-        0.0f,  1.0f,  0.0f,  1.0f,  0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
-        0.0f,  0.0f,  -0.5f, 0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  1.0f,  0.0f,
-        -0.5f, 0.5f,  -0.5f, 0.0f,  0.0f,  1.0f,  1.0f,  1.0f,  0.5f,  0.5f,
-        -0.5f, 1.0f,  1.0f,  0.0f,  0.0f,  1.0f,  -0.5f, -0.5f, -0.5f, 1.0f,
-        0.0f,  0.0f,  0.0f,  0.0f,  0.5f,  -0.5f, -0.5f, 0.0f,  1.0f,  0.0f,
-        1.0f,  0.0f,  0.5f,  -0.5f, 0.5f,  0.0f,  0.0f,  1.0f,  1.0f,  1.0f,
-        -0.5f, -0.5f, 0.5f,  1.0f,  1.0f,  0.0f,  0.0f,  1.0f,  -0.5f, -0.5f,
-        -0.5f, 1.0f,  0.0f,  0.0f,  0.0f,  0.0f,  -0.5f, 0.5f,  -0.5f, 0.0f,
-        1.0f,  0.0f,  1.0f,  0.0f,  -0.5f, 0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
-        1.0f,  1.0f,  -0.5f, -0.5f, 0.5f,  1.0f,  1.0f,  0.0f,  0.0f,  1.0f,
-        0.5f,  -0.5f, 0.5f,  1.0f,  0.0f,  0.0f,  0.0f,  0.0f,  0.5f,  0.5f,
-        0.5f,  0.0f,  1.0f,  0.0f,  1.0f,  0.0f,  0.5f,  0.5f,  -0.5f, 0.0f,
-        0.0f,  1.0f,  1.0f,  1.0f,  0.5f,  -0.5f, -0.5f, 1.0f,  1.0f,  0.0f,
-        0.0f,  1.0f,
-    },
+    {-0.5f, -0.5f, 0.5f, 0.0f, 0.0f, 1.0f, // Vertex 0
+     0.5f, -0.5f, 0.5f, 0.0f, 0.0f, 1.0f,  // Vertex 1
+     0.5f, 0.5f, 0.5f, 0.0f, 0.0f, 1.0f,   // Vertex 2
+     -0.5f, 0.5f, 0.5f, 0.0f, 0.0f, 1.0f,  // Vertex 3
+
+     // Back face
+     -0.5f, -0.5f, -0.5f, 0.0f, 0.0f, -1.0f, // Vertex 4
+     0.5f, -0.5f, -0.5f, 0.0f, 0.0f, -1.0f,  // Vertex 5
+     0.5f, 0.5f, -0.5f, 0.0f, 0.0f, -1.0f,   // Vertex 6
+     -0.5f, 0.5f, -0.5f, 0.0f, 0.0f, -1.0f,  // Vertex 7
+
+     // Right face
+     0.5f, -0.5f, 0.5f, 1.0f, 0.0f, 0.0f,  // Vertex 8
+     0.5f, -0.5f, -0.5f, 1.0f, 0.0f, 0.0f, // Vertex 9
+     0.5f, 0.5f, -0.5f, 1.0f, 0.0f, 0.0f,  // Vertex 10
+     0.5f, 0.5f, 0.5f, 1.0f, 0.0f, 0.0f,   // Vertex 11
+
+     // Left face
+     -0.5f, -0.5f, 0.5f, -1.0f, 0.0f, 0.0f,  // Vertex 12
+     -0.5f, -0.5f, -0.5f, -1.0f, 0.0f, 0.0f, // Vertex 13
+     -0.5f, 0.5f, -0.5f, -1.0f, 0.0f, 0.0f,  // Vertex 14
+     -0.5f, 0.5f, 0.5f, -1.0f, 0.0f, 0.0f,   // Vertex 15
+
+     // Top face
+     -0.5f, 0.5f, 0.5f, 0.0f, 1.0f, 0.0f,  // Vertex 16
+     0.5f, 0.5f, 0.5f, 0.0f, 1.0f, 0.0f,   // Vertex 17
+     0.5f, 0.5f, -0.5f, 0.0f, 1.0f, 0.0f,  // Vertex 18
+     -0.5f, 0.5f, -0.5f, 0.0f, 1.0f, 0.0f, // Vertex 19
+
+     // Bottom face
+     -0.5f, -0.5f, 0.5f, 0.0f, -1.0f, 0.0f, // Vertex 20
+     0.5f, -0.5f, 0.5f, 0.0f, -1.0f, 0.0f,  // Vertex 21
+     0.5f, -0.5f, -0.5f, 0.0f, -1.0f, 0.0f, // Vertex 22
+     -0.5f, -0.5f, -0.5f, 0.0f, -1.0f, 0.0f},
         {
             0,  1,  2,  2,  3,  0,  4,  5,  6,  6,  7,  4,
             8,  9,  10, 10, 11, 8,  12, 13, 14, 14, 15, 12,
@@ -70,6 +82,7 @@ void Application::run() const {
 
   auto box = std::make_unique<Mesh>(cube.vertices, cube.indices);
   auto light = std::make_unique<Mesh>(cube.vertices, cube.indices);
+  auto light_pos = glm::vec3{1.2f, 1.f, -3.f};
 
   Shader colour_prog("colours.vert", "colours.frag");
   Shader light_prog("light.vert", "light.frag");
@@ -90,6 +103,7 @@ void Application::run() const {
 
       colour_prog.set_vec3("u_object_colour", 1.f, .5f, .31f);
       colour_prog.set_vec3("u_light_colour", 1.f, 1.f, 1.f);
+      colour_prog.set_vec3("u_light_position", light_pos);
 
       colour_prog.set_mat4("u_projection", projection);
       colour_prog.set_mat4("u_view", view);
@@ -105,7 +119,6 @@ void Application::run() const {
 
       light_prog.set_mat4("u_projection", projection);
       light_prog.set_mat4("u_view", view);
-      auto light_pos = glm::vec3{1.2f, 1.f, -3.f};
       auto model = glm::mat4(1.f);
       model = glm::translate(model, light_pos);
       model = glm::scale(model, glm::vec3(.2f));

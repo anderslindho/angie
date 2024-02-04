@@ -5,15 +5,14 @@
 Mesh::Mesh(const std::vector<float> &positions,
            const std::vector<unsigned int> &indices)
     : m_tb(nullptr), m_positions(positions), m_indices(indices) {
-  m_va = std::make_unique<VertexArray>(8);
+  m_va = std::make_unique<VertexArray>(6);
   m_vb = std::make_unique<VertexBuffer>(positions);
   m_ib = std::make_unique<IndexBuffer>(indices);
   m_va->bind();
   m_vb->bind();
   m_ib->bind();
   m_va->add_attribute(0, 3); // position
-  m_va->add_attribute(1, 3); // colour
-  m_va->add_attribute(2, 2); // texture
+  m_va->add_attribute(1, 3); // normals
 }
 
 Mesh::~Mesh() {
