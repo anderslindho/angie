@@ -8,6 +8,15 @@ glm::mat4 Camera::get_view_matrix() const {
   return glm::lookAt(m_position, m_position + m_direction, m_up);
 }
 
+void Camera::set_aspect_ratio(float aspect_ratio) {
+  m_aspect_ratio = aspect_ratio;
+}
+
+glm::mat4 Camera::get_projection_matrix() const {
+  return glm::perspective(glm::radians(m_field_of_view_radians), m_aspect_ratio,
+                          m_near_clip_plane, m_far_clip_plane);
+}
+
 void Camera::move(Direction direction, float delta_time) {
   auto magnitude = m_movement_speed * delta_time;
   switch (direction) {

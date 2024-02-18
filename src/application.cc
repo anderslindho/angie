@@ -23,7 +23,10 @@ Application::Application(const unsigned int width, const unsigned int height,
       m_window(std::make_unique<Window>(width, height)),
       m_renderer(std::make_unique<Renderer>()),
       m_camera_controller(
-          std::make_unique<CameraController>(*m_camera, *m_window)) {}
+          std::make_unique<CameraController>(*m_camera, *m_window)) {
+  m_window->set_resize_callback(
+      [this](int width, int height) { handle_resize(width, height); });
+}
 
 void Application::run() const {
   struct Model {
@@ -95,8 +98,7 @@ void Application::run() const {
         std::chrono::duration<float>(time - prev_time).count();
 
     m_renderer->prepare();
-    glm::mat4 projection =
-        glm::perspective(glm::radians(45.0f), 800.0f / 640.0f, 0.1f, 100.0f);
+    auto projection = m_camera->get_projection_matrix();
     auto view = m_camera->get_view_matrix();
 
     const auto run_time = std::chrono::duration_cast<std::chrono::milliseconds>(

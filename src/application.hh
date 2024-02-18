@@ -4,10 +4,10 @@
 #include <memory>
 #include <string>
 
+#include "camera/camera.hh"
 #include "graphics/renderer.hh"
 
 class Window;
-class Camera;
 class CameraController;
 
 struct Application {
@@ -30,4 +30,10 @@ public:
   ~Application();
 
   void run() const;
+
+private:
+  void handle_resize(int width, int height) {
+    m_camera->set_aspect_ratio(static_cast<float>(width) /
+                               static_cast<float>(height));
+  };
 };

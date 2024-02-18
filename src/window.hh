@@ -6,11 +6,6 @@
 #include <glbinding/gl/gl.h>
 #include <glbinding/glbinding.h>
 
-#include "camera/camera.hh"
-
-void framebuffer_size_callback(GLFWwindow * /* window */, int width,
-                               int height);
-
 class Window {
 private:
   GLFWwindow *m_window;
@@ -27,4 +22,12 @@ public:
 
   bool is_key_pressed(int key) const;
   void get_cursor_position(double &x, double &y) const;
+
+  void set_resize_callback(std::function<void(int, int)> callback);
+
+private:
+  std::function<void(int, int)> m_resize_callback;
+
+  static void framebuffer_size_callback(GLFWwindow *window, int width,
+                                        int height);
 };
