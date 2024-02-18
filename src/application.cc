@@ -18,14 +18,15 @@
 
 Application::Application(const unsigned int width, const unsigned int height,
                          const std::string &title)
-    : m_title(title), m_start_time(std::chrono::system_clock::now()),
-      m_camera(std::make_unique<Camera>(.5f, 1.f, 5.f)),
-      m_window(std::make_unique<Window>(width, height)),
+    : m_title(title), m_window(std::make_unique<Window>(width, height)),
       m_renderer(std::make_unique<Renderer>()),
+      m_camera(std::make_unique<Camera>(.5f, 1.f, 5.f)),
       m_camera_controller(
           std::make_unique<CameraController>(*m_camera, *m_window)) {
+
   m_window->set_resize_callback(
       [this](int width, int height) { handle_resize(width, height); });
+  m_start_time = std::chrono::system_clock::now();
 }
 
 void Application::run() const {
@@ -120,6 +121,7 @@ void Application::run() const {
 
       colour_prog.set_mat4("u_projection", projection);
       colour_prog.set_mat4("u_view", view);
+
       auto model = glm::mat4{1.f};
       model = glm::translate(model, box_pos);
       colour_prog.set_mat4("u_model", model);
@@ -133,9 +135,11 @@ void Application::run() const {
 
       light_prog.set_mat4("u_projection", projection);
       light_prog.set_mat4("u_view", view);
+
       auto model = glm::mat4(1.f);
       model = glm::translate(model, light_pos);
       model = glm::scale(model, glm::vec3(.2f));
+
       light_prog.set_mat4("u_model", model);
 
       m_renderer->render(light, light_prog);

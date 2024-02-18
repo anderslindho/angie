@@ -23,11 +23,12 @@ public:
   Camera(float x, float y, float z) : m_position(glm::vec3(x, y, z)) {}
 
   glm::mat4 get_view_matrix() const;
-  void set_aspect_ratio(float aspect_ratio);
   glm::mat4 get_projection_matrix() const;
 
   void move(Direction direction, float delta_time);
   void handle_mouse_movement(double x_pos, double y_pos, float delta_time);
+
+  void set_aspect_ratio(float aspect_ratio);
 
 private:
   glm::vec3 m_up{0.f, 1.f, 0.f};

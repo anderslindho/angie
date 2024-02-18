@@ -13,11 +13,10 @@ class CameraController;
 struct Application {
 private:
   std::string m_title;
-  std::chrono::time_point<std::chrono::system_clock> m_start_time;
 
-  std::unique_ptr<Camera> m_camera;
   std::unique_ptr<Window> m_window;
   std::unique_ptr<Renderer> m_renderer;
+  std::unique_ptr<Camera> m_camera;
   std::unique_ptr<CameraController> m_camera_controller;
 
 public:
@@ -32,6 +31,7 @@ public:
   void run() const;
 
 private:
+  std::chrono::time_point<std::chrono::system_clock> m_start_time;
   void handle_resize(int width, int height) {
     m_camera->set_aspect_ratio(static_cast<float>(width) /
                                static_cast<float>(height));
