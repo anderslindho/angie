@@ -52,7 +52,14 @@ void Window::update() const {
   glfwPollEvents();
 }
 
-bool Window::is_key_pressed(int key) const {
+bool Window::is_key_pressed(int key) {
+  // TODO: move elsewhere (input manager might be required)
+  if (glfwGetKey(m_window, GLFW_KEY_N) == GLFW_PRESS) {
+    set_wireframe_mode(true);
+  }
+  if (glfwGetKey(m_window, GLFW_KEY_M) == GLFW_PRESS) {
+    set_wireframe_mode(false);
+  }
   return glfwGetKey(m_window, key) == GLFW_PRESS;
 }
 
@@ -73,5 +80,13 @@ void Window::framebuffer_size_callback(GLFWwindow *window, int width,
   Window *instance = static_cast<Window *>(glfwGetWindowUserPointer(window));
   if (instance != nullptr && instance->m_resize_callback) {
     instance->m_resize_callback(width, height);
+  }
+}
+
+void Window::set_wireframe_mode(bool state) {
+  if (state == true) {
+    gl::glPolygonMode(gl::GL_FRONT_AND_BACK, gl::GL_LINE);
+  } else {
+    gl::glPolygonMode(gl::GL_FRONT_AND_BACK, gl::GL_FILL);
   }
 }
