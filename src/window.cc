@@ -2,7 +2,6 @@
 
 #include <spdlog/spdlog.h>
 
-#include <GLFW/glfw3.h>
 #include <glbinding/gl/gl.h>
 #include <glbinding/glbinding.h>
 
