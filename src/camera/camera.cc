@@ -17,8 +17,7 @@ glm::mat4 Camera::get_projection_matrix() const {
                           m_near_clip_plane, m_far_clip_plane);
 }
 
-void Camera::move(Direction direction, float delta_time) {
-  auto magnitude = m_movement_speed * delta_time;
+void Camera::move(Direction direction, float magnitude) {
   switch (direction) {
   case Direction::k_forward:
     m_position += m_direction * magnitude;
@@ -41,8 +40,7 @@ void Camera::move(Direction direction, float delta_time) {
   }
 }
 
-void Camera::handle_mouse_movement(double x_pos, double y_pos,
-                                   float delta_time) {
+void Camera::reorient(double x_pos, double y_pos, float magnitude) {
   if (first_mouse) {
     m_last_mouse_x = x_pos;
     m_last_mouse_y = y_pos;
@@ -53,8 +51,8 @@ void Camera::handle_mouse_movement(double x_pos, double y_pos,
   double delta_x = x_pos - m_last_mouse_x;
   double delta_y = y_pos - m_last_mouse_y;
 
-  m_yaw += static_cast<float>(delta_x) * m_mouse_sensitivity * delta_time;
-  m_pitch -= static_cast<float>(delta_y) * m_mouse_sensitivity * delta_time;
+  m_yaw += static_cast<float>(delta_x) * magnitude;
+  m_pitch -= static_cast<float>(delta_y) * magnitude;
 
   if (m_pitch > 89.0f)
     m_pitch = 89.0f;
