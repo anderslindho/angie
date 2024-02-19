@@ -1,6 +1,5 @@
 #pragma once
 
-#include <chrono>
 #include <memory>
 #include <string>
 
@@ -31,7 +30,7 @@ public:
   void run() const;
 
 private:
-  std::chrono::time_point<std::chrono::system_clock> m_start_time;
+  float m_start_time;
   void handle_resize(int width, int height) {
     m_camera->set_aspect_ratio(static_cast<float>(width) /
                                static_cast<float>(height));

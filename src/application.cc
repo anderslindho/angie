@@ -1,6 +1,5 @@
 #include "application.hh"
 
-#include <chrono>
 #include <cmath>
 #include <cstdlib>
 #include <iostream>
@@ -26,7 +25,7 @@ Application::Application(const unsigned int width, const unsigned int height,
 
   m_window->set_resize_callback(
       [this](int width, int height) { handle_resize(width, height); });
-  m_start_time = std::chrono::system_clock::now();
+  m_start_time = glfwGetTime();
 }
 
 void Application::run() const {
@@ -82,7 +81,7 @@ void Application::run() const {
     }
   };
 
-  auto prev_time = std::chrono::system_clock::now();
+  auto prev_time = glfwGetTime();
 
   auto box = std::make_unique<Mesh>(cube.vertices, cube.indices);
   auto box_pos = glm::vec3{0.f, 0.f, 0.f};
@@ -90,21 +89,18 @@ void Application::run() const {
 
   auto light = std::make_unique<Mesh>(cube.vertices, cube.indices);
   auto circling_radius = 2.f;
-  float angular_velocity = .001f;
+  float angular_velocity = 1.f;
   Shader light_prog("light.vert", "light.frag");
 
   while (m_window->should_stay_open()) {
-    auto time = std::chrono::system_clock::now();
-    const float delta_time =
-        std::chrono::duration<float>(time - prev_time).count();
+    auto time = glfwGetTime();
+    const double delta_time = time - prev_time;
 
     m_renderer->prepare();
     auto projection = m_camera->get_projection_matrix();
     auto view = m_camera->get_view_matrix();
 
-    const auto run_time = std::chrono::duration_cast<std::chrono::milliseconds>(
-                              std::chrono::system_clock::now() - m_start_time)
-                              .count();
+    const double run_time = glfwGetTime() - m_start_time;
     float angle = angular_velocity * run_time;
     float x = box_pos.x + circling_radius * cos(angle);
     float y = box_pos.y + .7f;
@@ -153,8 +149,6 @@ void Application::run() const {
 }
 
 Application::~Application() {
-  const auto run_time = std::chrono::duration_cast<std::chrono::seconds>(
-                            std::chrono::system_clock::now() - m_start_time)
-                            .count();
-  spdlog::info("Program ran for {} seconds.", run_time);
+  const auto run_time = glfwGetTime();
+  spdlog::info("Program ran for {} seconds.", std::round(run_time));
 }
