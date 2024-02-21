@@ -9,6 +9,7 @@
 class Window {
 private:
   GLFWwindow *m_window;
+  double refresh_timeout{.01f};
 
 public:
   Window(const int width, const int height);

@@ -22,6 +22,7 @@ Window::Window(const int width, const int height) {
   }
   spdlog::info("GLFW {}", glfwGetVersionString());
   glfwMakeContextCurrent(window);
+  glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
   /* necessary to redefine the (global) callbacks
     retrieve with
@@ -48,7 +49,8 @@ Window::~Window() {
 
 void Window::update() const {
   glfwSwapBuffers(m_window);
-  glfwPollEvents();
+  // TODO: replace with some sort of eventmanager
+  glfwWaitEventsTimeout(refresh_timeout);
 }
 
 bool Window::is_key_pressed(int key) {
