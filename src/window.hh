@@ -12,7 +12,7 @@ private:
   double refresh_timeout{.01f};
 
 public:
-  Window(const int width, const int height);
+  Window(const int width, const int height, std::string title);
   ~Window();
   Window(const Window &) = delete;
   Window &operator=(const Window &) = delete;

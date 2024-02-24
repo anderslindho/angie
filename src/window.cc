@@ -5,7 +5,7 @@
 #include <glbinding/gl/gl.h>
 #include <glbinding/glbinding.h>
 
-Window::Window(const int width, const int height) {
+Window::Window(const int width, const int height, std::string title) {
   glfwInit();
   glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
   glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
@@ -14,7 +14,8 @@ Window::Window(const int width, const int height) {
 #ifdef __APPLE__
   glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, true);
 #endif
-  auto window = glfwCreateWindow(width, height, "angie", nullptr, nullptr);
+  auto window =
+      glfwCreateWindow(width, height, title.c_str(), nullptr, nullptr);
   if (!window) {
     spdlog::error("Failed to init window");
     glfwTerminate();
