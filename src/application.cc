@@ -25,6 +25,9 @@ Application::Application(const unsigned int width, const unsigned int height,
 
   m_window->set_resize_callback(
       [this](int width, int height) { handle_resize(width, height); });
+
+  m_camera->set_aspect_ratio(static_cast<float>(width) /
+                             static_cast<float>(height));
   m_start_time = glfwGetTime();
 }
 
