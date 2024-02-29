@@ -1,6 +1,6 @@
-#include "mesh.hh"
+#include "mesh.h"
 
-#include "shader.hh"
+#include "shader.h"
 
 Mesh::Mesh(const std::vector<float> &positions,
            const std::vector<unsigned int> &indices)

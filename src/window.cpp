@@ -1,4 +1,4 @@
-#include "window.hh"
+#include "window.h"
 
 #include <spdlog/spdlog.h>
 

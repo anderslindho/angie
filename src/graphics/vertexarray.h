@@ -3,7 +3,7 @@
 #include <cstddef>
 #include <vector>
 
-#include "vertexbuffer.hh"
+#include "vertexbuffer.h"
 
 // should maybe bind different vb & ib combinations
 class VertexArray {

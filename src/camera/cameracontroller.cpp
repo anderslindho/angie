@@ -1,4 +1,4 @@
-#include "cameracontroller.hh"
+#include "cameracontroller.h"
 
 #include <glm/glm.hpp>
 

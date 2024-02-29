@@ -2,8 +2,8 @@
 
 #include <glbinding/gl/gl.h>
 
-#include "mesh.hh"
-#include "shader.hh"
+#include "mesh.h"
+#include "shader.h"
 
 class Renderer {
 public:

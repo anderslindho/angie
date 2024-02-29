@@ -18,20 +18,20 @@ set(LIB_DIR libs)
 set(EXTERN_DIR extern)
 
 set(SRCS
-  ${SRC_DIR}/main.cc
-  ${SRC_DIR}/application.cc
-  ${SRC_DIR}/window.cc
+  ${SRC_DIR}/main.cpp
+  ${SRC_DIR}/application.cpp
+  ${SRC_DIR}/window.cpp
 
-  ${SRC_DIR}/camera/cameracontroller.cc
-  ${SRC_DIR}/camera/camera.cc
+  ${SRC_DIR}/camera/cameracontroller.cpp
+  ${SRC_DIR}/camera/camera.cpp
 
-  ${SRC_DIR}/graphics/renderer.cc
-  ${SRC_DIR}/graphics/mesh.cc
-  ${SRC_DIR}/graphics/vertexbuffer.cc
-  ${SRC_DIR}/graphics/vertexarray.cc
-  ${SRC_DIR}/graphics/indexbuffer.cc
-  ${SRC_DIR}/graphics/shader.cc
-  ${SRC_DIR}/graphics/texture.cc
+  ${SRC_DIR}/graphics/renderer.cpp
+  ${SRC_DIR}/graphics/mesh.cpp
+  ${SRC_DIR}/graphics/vertexbuffer.cpp
+  ${SRC_DIR}/graphics/vertexarray.cpp
+  ${SRC_DIR}/graphics/indexbuffer.cpp
+  ${SRC_DIR}/graphics/shader.cpp
+  ${SRC_DIR}/graphics/texture.cpp
 )
 
 add_executable(${PROJECT_NAME} ${SRCS})

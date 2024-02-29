@@ -1,4 +1,4 @@
-#include "indexbuffer.hh"
+#include "indexbuffer.h"
 
 #include <glbinding/gl/gl.h>
 

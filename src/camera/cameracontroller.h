@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../window.hh"
-#include "camera.hh"
+#include "../window.h"
+#include "camera.h"
 
 class CameraController {
 private:

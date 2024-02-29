@@ -1,4 +1,4 @@
-#include "vertexarray.hh"
+#include "vertexarray.h"
 
 #include <glbinding/gl/gl.h>
 

@@ -1,4 +1,4 @@
-#include "vertexbuffer.hh"
+#include "vertexbuffer.h"
 
 #include <glbinding/gl/gl.h>
 

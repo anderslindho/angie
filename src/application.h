@@ -3,8 +3,8 @@
 #include <memory>
 #include <string>
 
-#include "camera/camera.hh"
-#include "graphics/renderer.hh"
+#include "camera/camera.h"
+#include "graphics/renderer.h"
 
 class Window;
 class CameraController;

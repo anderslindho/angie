@@ -1,4 +1,4 @@
-#include "application.hh"
+#include "application.h"
 
 #include <cmath>
 #include <cstdlib>
@@ -11,9 +11,9 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <spdlog/spdlog.h>
 
-#include "camera/cameracontroller.hh"
-#include "graphics/shader.hh"
-#include "window.hh"
+#include "camera/cameracontroller.h"
+#include "graphics/shader.h"
+#include "window.h"
 
 Application::Application(const unsigned int width, const unsigned int height,
                          const std::string &title)

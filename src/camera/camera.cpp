@@ -1,4 +1,4 @@
-#include "camera.hh"
+#include "camera.h"
 
 #include <spdlog/spdlog.h>
 

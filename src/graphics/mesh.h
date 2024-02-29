@@ -2,9 +2,9 @@
 
 #include <vector>
 
-#include "indexbuffer.hh"
-#include "texture.hh"
-#include "vertexarray.hh"
+#include "indexbuffer.h"
+#include "texture.h"
+#include "vertexarray.h"
 
 class Shader;
 
