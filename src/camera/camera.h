@@ -25,6 +25,7 @@ public:
 
   glm::mat4 get_view_matrix() const;
   glm::mat4 get_projection_matrix() const;
+  glm::vec3 get_position() const { return m_position; }
 
   void move(Direction direction, float magnitude);
   void reorient(double x_pos, double y_pos, float magnitude);

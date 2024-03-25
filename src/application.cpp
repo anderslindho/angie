@@ -117,6 +117,7 @@ void Application::run() const {
       colour_prog.set_vec3("u_object_colour", 1.f, .5f, .31f);
       colour_prog.set_vec3("u_light_colour", 1.f, 1.f, 1.f);
       colour_prog.set_vec3("u_light_position", light_pos);
+      colour_prog.set_vec3("u_view_position", m_camera->get_position());
 
       colour_prog.set_mat4("u_projection", projection);
       colour_prog.set_mat4("u_view", view);
