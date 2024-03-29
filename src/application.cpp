@@ -89,6 +89,12 @@ void Application::run() const {
   auto box = std::make_unique<Mesh>(cube.vertices, cube.indices);
   auto box_pos = glm::vec3{0.f, 0.f, 0.f};
   Shader colour_prog("colours.vert", "colours.frag");
+  colour_prog.use();
+
+  colour_prog.set_vec3("u_material.ambient", 1.f, .5f, .31f);
+  colour_prog.set_vec3("u_material.diffuse", 1.f, .5f, .31f);
+  colour_prog.set_vec3("u_material.specular", .5f, .5f, .5f);
+  colour_prog.set_float("u_material.shininess", 32.f);
 
   auto light = std::make_unique<Mesh>(cube.vertices, cube.indices);
   auto circling_radius = 2.f;
@@ -114,9 +120,11 @@ void Application::run() const {
       // box
       colour_prog.use();
 
-      colour_prog.set_vec3("u_object_colour", 1.f, .5f, .31f);
-      colour_prog.set_vec3("u_light_colour", 1.f, 1.f, 1.f);
-      colour_prog.set_vec3("u_light_position", light_pos);
+      colour_prog.set_vec3("u_light.position", light_pos);
+      colour_prog.set_vec3("u_light.ambient", .2f, .2f, .2f);
+      colour_prog.set_vec3("u_light.diffuse", .5f, .5f, .5f);
+      colour_prog.set_vec3("u_light.specular", 1.f, 1.f, 1.f);
+
       colour_prog.set_vec3("u_view_position", m_camera->get_position());
 
       colour_prog.set_mat4("u_projection", projection);

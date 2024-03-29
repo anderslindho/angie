@@ -1,31 +1,47 @@
 #version 410 core
 
+struct Material {
+    vec3 ambient;
+    vec3 diffuse;
+    vec3 specular;
+    float shininess;
+};
+
+struct Light {
+    vec3 position;
+
+    vec3 ambient;
+    vec3 diffuse;
+    vec3 specular;
+};
+
 in vec3 v_out_pos;
 in vec3 v_out_normal;
 
-uniform vec3 u_object_colour;
-uniform vec3 u_light_colour;
-uniform vec3 u_light_position;
 uniform vec3 u_view_position;
+
+uniform Material u_material;
+uniform Light u_light;
 
 out vec4 f_out_colour;
 
 void main()
 {
-    float ambient_light_strength = .1f;
-    float specular_reflection_strength = .5f;
+    // ambient
+    vec3 ambient_light = u_light.ambient * u_material.ambient;
 
-    vec3 ambient_light = ambient_light_strength * u_light_colour;
-
+    // diffuse
     vec3 normal = normalize(v_out_normal);
-    vec3 light_direction = normalize(u_light_position - v_out_pos);
+    vec3 light_direction = normalize(u_light.position - v_out_pos);
     float diff = max(dot(normal, light_direction), 0.f);
-    vec3 diffuse = diff * u_light_colour;
+    vec3 diffuse = u_light.diffuse * (diff * u_material.diffuse);
 
-    vec3 view_direction = normalize(u_view_position - u_light_position);
+    // specular
+    vec3 view_direction = normalize(u_view_position - u_light.position);
     vec3 reflection_direction = reflect(-light_direction, normal);
-    float specular = pow(max(dot(view_direction, reflection_direction), 0.f), 64);
+    float spec = pow(max(dot(view_direction, reflection_direction), 0.f), u_material.shininess);
+    vec3 specular = u_light.specular * (spec * u_material.specular);
 
-    vec3 result = (ambient_light + diffuse + specular) * u_object_colour;
+    vec3 result = ambient_light + diffuse + specular;
     f_out_colour = vec4(result, 1.f);
 }
