@@ -10,11 +10,12 @@ private:
   std::string m_texture_dir{"res/textures/"};
 
 public:
-  Texture(const std::string &fname);
+  Texture(const std::string &fname, int unit);
   ~Texture();
   Texture(const Texture &) = delete;
   Texture &operator=(const Texture &) = delete;
 
-  void bind() const;
+  void bind(int unit) const;
+  void unbind() const;
   void destroy();
 };

@@ -14,6 +14,7 @@ private:
   std::unique_ptr<VertexBuffer> m_vb;
   std::unique_ptr<IndexBuffer> m_ib;
   std::unique_ptr<Texture> m_tb;
+  std::unique_ptr<Texture> m_sb;
 
   std::vector<float> m_positions;
   std::vector<unsigned int> m_indices;
@@ -27,4 +28,5 @@ public:
 
   void draw(const Shader &shader) const;
   void add_texture(const std::string &path);
+  void add_specular_map(const std::string &path);
 };

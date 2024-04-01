@@ -13,6 +13,7 @@
 
 #include "camera/cameracontroller.h"
 #include "graphics/shader.h"
+#include "graphics/texture.h"
 #include "window.h"
 
 Application::Application(const unsigned int width, const unsigned int height,
@@ -36,70 +37,70 @@ void Application::run() const {
     std::vector<float> vertices;
     std::vector<unsigned int> indices;
     std::string texture;
+    std::string specular_map;
   };
 
-  // These coordinates and indices are shamelessly stolen
-  struct Model cube {
-    {-0.5f, -0.5f, 0.5f, 0.0f, 0.0f, 1.0f, // Vertex 0
-     0.5f, -0.5f, 0.5f, 0.0f, 0.0f, 1.0f,  // Vertex 1
-     0.5f, 0.5f, 0.5f, 0.0f, 0.0f, 1.0f,   // Vertex 2
-     -0.5f, 0.5f, 0.5f, 0.0f, 0.0f, 1.0f,  // Vertex 3
+  Model cube{{
+                 // position          // normal            // texture
+                 -0.5f, -0.5f, 0.5f,  0.0f,  0.0f,  1.0f,  0.0f, 0.0f,
+                 0.5f,  -0.5f, 0.5f,  0.0f,  0.0f,  1.0f,  1.0f, 0.0f,
+                 0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  1.0f, 1.0f,
+                 -0.5f, 0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  0.0f, 1.0f,
 
-     // Back face
-     -0.5f, -0.5f, -0.5f, 0.0f, 0.0f, -1.0f, // Vertex 4
-     0.5f, -0.5f, -0.5f, 0.0f, 0.0f, -1.0f,  // Vertex 5
-     0.5f, 0.5f, -0.5f, 0.0f, 0.0f, -1.0f,   // Vertex 6
-     -0.5f, 0.5f, -0.5f, 0.0f, 0.0f, -1.0f,  // Vertex 7
+                 -0.5f, -0.5f, -0.5f, 0.0f,  0.0f,  -1.0f, 0.0f, 0.0f,
+                 0.5f,  -0.5f, -0.5f, 0.0f,  0.0f,  -1.0f, 1.0f, 0.0f,
+                 0.5f,  0.5f,  -0.5f, 0.0f,  0.0f,  -1.0f, 1.0f, 1.0f,
+                 -0.5f, 0.5f,  -0.5f, 0.0f,  0.0f,  -1.0f, 0.0f, 1.0f,
 
-     // Right face
-     0.5f, -0.5f, 0.5f, 1.0f, 0.0f, 0.0f,  // Vertex 8
-     0.5f, -0.5f, -0.5f, 1.0f, 0.0f, 0.0f, // Vertex 9
-     0.5f, 0.5f, -0.5f, 1.0f, 0.0f, 0.0f,  // Vertex 10
-     0.5f, 0.5f, 0.5f, 1.0f, 0.0f, 0.0f,   // Vertex 11
+                 0.5f,  -0.5f, 0.5f,  1.0f,  0.0f,  0.0f,  0.0f, 0.0f,
+                 0.5f,  -0.5f, -0.5f, 1.0f,  0.0f,  0.0f,  0.0f, 1.0f,
+                 0.5f,  0.5f,  -0.5f, 1.0f,  0.0f,  0.0f,  1.0f, 1.0f,
+                 0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  1.0f, 0.0f,
 
-     // Left face
-     -0.5f, -0.5f, 0.5f, -1.0f, 0.0f, 0.0f,  // Vertex 12
-     -0.5f, -0.5f, -0.5f, -1.0f, 0.0f, 0.0f, // Vertex 13
-     -0.5f, 0.5f, -0.5f, -1.0f, 0.0f, 0.0f,  // Vertex 14
-     -0.5f, 0.5f, 0.5f, -1.0f, 0.0f, 0.0f,   // Vertex 15
+                 -0.5f, -0.5f, 0.5f,  -1.0f, 0.0f,  0.0f,  0.0f, 0.0f,
+                 -0.5f, -0.5f, -0.5f, -1.0f, 0.0f,  0.0f,  0.0f, 1.0f,
+                 -0.5f, 0.5f,  -0.5f, -1.0f, 0.0f,  0.0f,  1.0f, 1.0f,
+                 -0.5f, 0.5f,  0.5f,  -1.0f, 0.0f,  0.0f,  1.0f, 0.0f,
 
-     // Top face
-     -0.5f, 0.5f, 0.5f, 0.0f, 1.0f, 0.0f,  // Vertex 16
-     0.5f, 0.5f, 0.5f, 0.0f, 1.0f, 0.0f,   // Vertex 17
-     0.5f, 0.5f, -0.5f, 0.0f, 1.0f, 0.0f,  // Vertex 18
-     -0.5f, 0.5f, -0.5f, 0.0f, 1.0f, 0.0f, // Vertex 19
+                 -0.5f, 0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  0.0f, 0.0f,
+                 0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  1.0f, 0.0f,
+                 0.5f,  0.5f,  -0.5f, 0.0f,  1.0f,  0.0f,  1.0f, 1.0f,
+                 -0.5f, 0.5f,  -0.5f, 0.0f,  1.0f,  0.0f,  0.0f, 1.0f,
 
-     // Bottom face
-     -0.5f, -0.5f, 0.5f, 0.0f, -1.0f, 0.0f, // Vertex 20
-     0.5f, -0.5f, 0.5f, 0.0f, -1.0f, 0.0f,  // Vertex 21
-     0.5f, -0.5f, -0.5f, 0.0f, -1.0f, 0.0f, // Vertex 22
-     -0.5f, -0.5f, -0.5f, 0.0f, -1.0f, 0.0f},
-        {
-            0,  1,  2,  2,  3,  0,  4,  5,  6,  6,  7,  4,
-            8,  9,  10, 10, 11, 8,  12, 13, 14, 14, 15, 12,
-            16, 17, 18, 18, 19, 16, 20, 21, 22, 22, 23, 20,
-        },
-    {
-      "container.jpg"
-    }
-  };
+                 -0.5f, -0.5f, 0.5f,  0.0f,  -1.0f, 0.0f,  0.0f, 0.0f,
+                 0.5f,  -0.5f, 0.5f,  0.0f,  -1.0f, 0.0f,  1.0f, 0.0f,
+                 0.5f,  -0.5f, -0.5f, 0.0f,  -1.0f, 0.0f,  1.0f, 1.0f,
+                 -0.5f, -0.5f, -0.5f, 0.0f,  -1.0f, 0.0f,  0.0f, 1.0f,
+             },
+             {
+                 0,  1,  2,  2,  3,  0,  4,  5,  6,  6,  7,  4,
+                 8,  9,  10, 10, 11, 8,  12, 13, 14, 14, 15, 12,
+                 16, 17, 18, 18, 19, 16, 20, 21, 22, 22, 23, 20,
+             },
+             {"container2.png"},
+             {"container2_specular.png"}};
 
   auto prev_time = glfwGetTime();
 
   auto box = std::make_unique<Mesh>(cube.vertices, cube.indices);
+  box->add_texture(cube.texture);
+  box->add_specular_map(cube.specular_map);
   auto box_pos = glm::vec3{0.f, 0.f, 0.f};
+
   Shader colour_prog("colours.vert", "colours.frag");
   colour_prog.use();
-
   colour_prog.set_vec3("u_material.ambient", 1.f, .5f, .31f);
-  colour_prog.set_vec3("u_material.diffuse", 1.f, .5f, .31f);
-  colour_prog.set_vec3("u_material.specular", .5f, .5f, .5f);
   colour_prog.set_float("u_material.shininess", 32.f);
+  colour_prog.set_int("u_material.diffuse", 0);
+  colour_prog.set_int("u_material.specular", 1);
 
   auto light = std::make_unique<Mesh>(cube.vertices, cube.indices);
   auto circling_radius = 2.f;
   float angular_velocity = 1.f;
   Shader light_prog("light.vert", "light.frag");
+  auto light_colour = glm::vec3{1.f, 1.f, .8f};
+  light_prog.use();
+  light_prog.set_vec3("u_light_colour", light_colour);
 
   while (m_window->should_stay_open()) {
     auto time = glfwGetTime();
@@ -121,8 +122,10 @@ void Application::run() const {
       colour_prog.use();
 
       colour_prog.set_vec3("u_light.position", light_pos);
-      colour_prog.set_vec3("u_light.ambient", .2f, .2f, .2f);
-      colour_prog.set_vec3("u_light.diffuse", .5f, .5f, .5f);
+      colour_prog.set_vec3("u_light.ambient",
+                           light_colour * glm::vec3{.2f, .2f, .2f});
+      colour_prog.set_vec3("u_light.diffuse",
+                           light_colour * glm::vec3{.5f, .5f, .5f});
       colour_prog.set_vec3("u_light.specular", 1.f, 1.f, 1.f);
 
       colour_prog.set_vec3("u_view_position", m_camera->get_position());
